@@ -1,0 +1,9 @@
+# conda env setup
+conda create -n ab_testing_env -c conda-forge python=3 numpy pandas scipy ipython-notebook matplotlib=3 
+source activate ab_testing_env
+
+# start the notebook
+ipython notebook AB_testing.ipynb
+
+
+
