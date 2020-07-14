@@ -5,8 +5,8 @@
 
 ### Enjoy and happy coding :-)
 
-The code is presented in the form of ipython notebooks.
-Each folder contains a 'setup_notes.txt' file. This file describes how to set up the environment for running the respective notebook. 
+The code is presented in the form of ipython notebooks or simply as py code.
+Each folder contains a 'setup_notes.txt' file. This file describes how to set up the environment for running the respective code. 
 
 
 #### Disclaimer: this repo does not relate to any proprietary rights 
