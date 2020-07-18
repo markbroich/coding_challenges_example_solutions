@@ -1,5 +1,12 @@
 # no setup needed as code uses base python3
+
+# run either:
 python max-people_alive.py
 
+# or:
+python max-people_alive_tree.py
+
+# or both
+python max-people_alive.py; python max-people_alive_tree.py
 
 
