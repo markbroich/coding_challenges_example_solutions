@@ -19,6 +19,13 @@ birth_death_list = [[2000, 2010],
                     [1803, 1921],
                     [1894, 1921]]
 
+# to test with a large random example
+# import random
+# birth_death_list = []
+# for x in range(1000000):
+#     b = random.randint(1900,2020)
+#     d = b + random.randint(0,99)
+#     birth_death_list.append([b, d])
 
 # start with describing a brute force algo and its big O with y = years and p is persons
 # O(y * p) 
@@ -277,8 +284,3 @@ brute_force_w_extra(person_birth_death_list, first_birth, last_death)
 # number of years to loop over: 261
 # compare with delta length
 # year max alive: 1803 number alive: 3
-
-
-
-
-
