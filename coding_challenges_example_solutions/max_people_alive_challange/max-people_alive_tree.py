@@ -42,7 +42,7 @@ def get_pop_peak_w_tree(birth_death_list):
     for person in birth_death_list: 
         y_b = person[0]; y_d = person[1]; 
         tree_w_deltas.changeval(y_b,1) # increment year_birth
-        tree_w_deltas.changeval(y_d,-1) # decrement year_death
+        tree_w_deltas.changeval(y_d+1,-1) # decrement year_death
         # the nodes calculate and store the population delta for an event year
     #
     # query the tree in order, track the running sum and return the year with the max people alive
@@ -75,8 +75,6 @@ class Node:
                         self.right = Node(key, value) # recursion
                     else: 
                         self.right.insert(key, value)
-                elif key == self.data[0]: # if the key matches, just put it here
-                    self.data = [key, value]
     #
     # method to change the delta value of a node
     def changeval(self, key, value):
@@ -129,7 +127,5 @@ t1 = time.time()
 runtime_O_of_P_plus_Y_algo_tree = t1-t0
 
 print('runtime_O_of_P_plus_Y_algo_tree  '+'  %.2E' % Decimal(runtime_O_of_P_plus_Y_algo_tree))
-
-
 
 
