@@ -62,23 +62,28 @@ class Node:
     # method to insert a node
     def insert(self, key, value):
         if not self.data: # if empty, fill
-            self.data = [key, value]
+            self.data = [key, value]; 
+            return
         else:
             if self.data:
                 if key < self.data[0]:
                     if self.left is None:
-                        self.left = Node(key, value) # recursion
+                        self.left = Node(key, value) 
                     else: 
-                        self.left.insert(key, value)
+                        self.left.insert(key, value) # recursion
                 elif key > self.data[0]:
                     if self.right is None:
-                        self.right = Node(key, value) # recursion
+                        self.right = Node(key, value) 
                     else: 
-                        self.right.insert(key, value)
+                        self.right.insert(key, value) # recursion
     #
     # method to change the delta value of a node
     def changeval(self, key, value):
-        if key < self.data[0]:
+        if key == self.data[0]:
+           new_val = self.data[1] + value # update existing delta value
+           self.data = [key, new_val]
+           return
+        elif key < self.data[0]:
             if self.left is None:
                 self.insert(key, value)
                 return 
@@ -88,9 +93,7 @@ class Node:
                 self.insert(key, value)
                 return 
             return self.right.changeval(key, value) # recursion
-        else:
-           new_val = self.data[1] + value # update existing delta value
-           self.data = [key, new_val]
+
     #
     # method to transverse the tree in order and track and retrun the running_sum, 
     # max_running_sum and the key_max_rs (key of the node where the max_running_sum was found)

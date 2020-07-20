@@ -22,7 +22,7 @@ birth_death_list = [[2000, 2010],
 # to test with a large random example
 # import random
 # birth_death_list = []
-# for x in range(1000000):
+# for x in range(100000):
 #     b = random.randint(1900,2020)
 #     d = b + random.randint(0,99)
 #     birth_death_list.append([b, d])
