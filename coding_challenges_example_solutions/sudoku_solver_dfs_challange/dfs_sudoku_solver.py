@@ -1,0 +1,155 @@
+# Depth First Search Sudoku solver
+# using a 'stack and loop' approach
+
+# this is my simplified and easy to follow DFS version of https://github.com/tphanco/sample/blob/master/DFS_Sudoku.py
+# prioritizes readability and simplicity over speed. 
+
+# for some background on the popular game of Sudoku: https://en.wikipedia.org/wiki/Sudoku
+
+import pickle 
+import time
+
+# function to run the solver
+def solve_puzzle(puzzle):
+    start_time = time.time()
+    solution = depth_first_search(puzzle)
+    elapsed_time = time.time() - start_time
+
+    if solution:
+        print ("Solution:")
+        for row in solution:
+            print (row)
+    else:
+        print ("No possible solutions")
+    print ("Elapsed time: " + str(elapsed_time))
+
+# depth_first_search stack work
+def depth_first_search(puzzle):
+    start_state = puzzle
+    # if the start == the solution, return
+    if solution_test(start_state):  
+        return start_state
+    #
+    stack = []
+    stack.append(start_state) # place initial state onto the stack = starting position after we checked that it was not the solution
+    # while there are states (partially filled puzzles) in the stack, continue           
+    while stack:                                                              
+        # take the last state off the stack (DFS pattern)
+        current_state = stack.pop() 
+        # if the state == the solution, return the solution
+        if solution_test(current_state): 
+            return current_state
+        # else, add viable states for the first empty cell onto the stack 
+        stack.extend(viable_states(current_state)) 
+    return None
+
+# test if a state == the solution; hence, sum of rows, columns and quadrats each == 45 (45 = sum of 1,2,3,4,5,6,7,8,9)
+def solution_test(state):
+    # expected sum of each row, column or quadrant.
+    total = sum(range(1, 9+1))
+    # check rows, columns, quadrants and return false if total is invalid
+    for row in range(9):
+        if (sum(state[row]) != total):
+            return False
+    for column in range(9):
+        if (sum(state[column]) != total):
+            return False
+    for column in range(0,9,3):
+        for row in range(0,9,3):
+            block_total = 0
+            for block_row in range(0,3):
+                for block_column in range(0,3):
+                    block_total += state[row + block_row][column + block_column]
+            if (block_total != total):
+                return False
+    return True
+
+# return list of valid states
+def viable_states(current_state):
+    all_possible_states = []
+    # get first empty cell in puzzle
+    row,column = get_cell(current_state) 
+    # get viabale numbers for cell by removing cell's invalid options
+    options = get_options(current_state, row, column)
+    # create all possible states for empty cell using options
+    for number in options: 
+        possible_state = state_w_current_number(current_state, number, row, column)
+        all_possible_states.append(possible_state)
+    return (all_possible_states) 
+
+# return first empty cell on grid (marked with 0)
+def get_cell(state):
+    for row in range(9):
+        for column in range(9):
+            if state[row][column] == 0:
+                return row, column
+
+# get viabale numbers for cell by removing cell's invalid options
+def get_options(current_state, row, column):
+    # defines valid numbers in puzzle
+    options = range(1, 9+1) 
+    options = filter_row(options, current_state, row)
+    options = filter_col(options, current_state, column)
+    options = filter_quad(options, current_state, row, column)
+    return options
+
+# filter valid values based on row
+def filter_row(options, state, row):
+    in_row = [number for number in state[row] if (number != 0)]
+    options = filter_values(options, in_row)
+    return options
+
+# filter valid values based on column
+def filter_col(options, state, column):
+    # list of valid values in cell's column
+    in_column = [] 
+    for column_index in range(9):
+        if state[column_index][column] != 0:
+            in_column.append(state[column_index][column])
+    options = filter_values(options, in_column)
+    return options
+
+# filter valid values based on quadrant
+def filter_quad(options, state, row, column):
+    # list of valid values in cell's quadrant
+    in_block = [] 
+    row_start = int(row/3)*3
+    column_start = int(column/3)*3
+    #
+    for block_row in range(0, 3):
+        for block_column in range(0,3):
+            in_block.append(state[row_start + block_row][column_start + block_column])
+    options = filter_values(options, in_block)
+    return options    
+
+# return set of valid numbers from values that do not appear in used
+def filter_values(values, used):
+    return [number for number in values if number not in used]
+
+# get state with current number inserted
+def state_w_current_number(current_state, number, row, column):
+    # to dump an object, and load it later; does the job in 1/3 the time that deepcopy 
+    new_state = pickle.loads(pickle.dumps(current_state)) 
+    new_state[row][column] = number
+    return(new_state)
+
+
+##### a partially filled puzzle: 
+puzzle = [[0,3,9,0,0,0,1,2,0],
+        [0,0,0,9,0,7,0,0,0],
+        [8,0,0,4,0,1,0,0,6],
+        [0,4,2,0,0,0,7,9,0],
+        [0,0,0,0,0,0,0,0,0],
+        [0,9,1,0,0,0,5,4,0],
+        [5,0,0,1,0,9,0,0,3],
+        [0,0,0,8,0,5,0,0,0],
+        [0,1,4,0,0,0,8,7,0]]
+
+print("A partially filled puzzle: ")
+for row in puzzle:
+    print (row)
+# 
+
+solve_puzzle(puzzle)
+
+# many speed upgrades are possible :)
