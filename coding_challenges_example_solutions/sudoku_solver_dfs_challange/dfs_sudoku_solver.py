@@ -9,19 +9,6 @@
 import pickle 
 import time
 
-# function to run the solver
-def solve_puzzle(puzzle):
-    start_time = time.time()
-    solution = depth_first_search(puzzle)
-    elapsed_time = time.time() - start_time
-
-    if solution:
-        print ("Solution:")
-        for row in solution:
-            print (row)
-    else:
-        print ("No possible solutions")
-    print ("Elapsed time: " + str(elapsed_time))
 
 # depth_first_search stack work
 def depth_first_search(puzzle):
@@ -150,6 +137,18 @@ for row in puzzle:
     print (row)
 # 
 
-solve_puzzle(puzzle)
+#run the solver
+start_time = time.time()
+a_solution = depth_first_search(puzzle)
+elapsed_time = time.time() - start_time
+if a_solution:
+    print ("A solution:")
+    for row in a_solution:
+        print (row)
+else:
+    print ("No possible solutions")
+print ("Elapsed time: " + str(elapsed_time))
+
+
 
 # many speed upgrades are possible :)
