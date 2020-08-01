@@ -173,4 +173,24 @@ print ("Elapsed time: " + str(elapsed_time))
 
 
 
+# logic why DFS is preferred over BFS:
+
+# L << B
+# where L = length of the shortest path to goal 
+# L = all_cells - filled_cells. 
+# with all_cells fixed at = 81
+# and filled_cells e.g. = 29, 
+# so, 
+# L = 81 - 29 = 52
+
+# and (average) branching factor B = choices_per_cell * unfilled_cells
+# with unfilled_cells = all_cells - filled_cells = L = 52
+# and choices_per_cell <= 9
+# hence, B  = 9 * 52 (in this example with filled_cells e.g. = 29)
+
+# so: L << B
+# BFS will spent a lot of time exploring the diverse branches at a shallow level far from the deeper solution. 
+# DFS may go deep down false paths but may also find the solution in as little as L steps 
+
+
 # many speed upgrades are possible :)
