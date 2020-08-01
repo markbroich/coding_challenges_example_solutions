@@ -6,28 +6,36 @@
 
 # for some background on the popular game of Sudoku: https://en.wikipedia.org/wiki/Sudoku
 
+
+# the code can also be run as breadth first search, with is a simple flick of 'mode' switch in the search function. 
+# breadth first search is slower than depth first search when solving Sudoku but the code modification is minimal:
+# all the mode switch does it change from stack to queue, hence from dfs to bfs (see lines 29 to 33)
+
 import pickle 
 import time
 
 
-# depth_first_search stack work
-def depth_first_search(puzzle):
+# depth_first_search stack method (when mode='dfs') or breadth_first_search method (when mode='bfs')
+def depth_first_search(puzzle, mode='dfs'):
     start_state = puzzle
     # if the start == the solution, return
     if solution_test(start_state):  
         return start_state
     #
-    stack = []
-    stack.append(start_state) # place initial state onto the stack = starting position after we checked that it was not the solution
-    # while there are states (partially filled puzzles) in the stack, continue           
-    while stack:                                                              
-        # take the last state off the stack (DFS pattern)
-        current_state = stack.pop() 
-        # if the state == the solution, return the solution
+    state_list = []
+    state_list.append(start_state) # place initial state onto the state_list = starting position after we checked that it was not the solution
+    # while there are states (partially filled puzzles) in the state_list, continue           
+    while state_list:                                    
+        if(mode=='dfs'):                          
+            # take the last state off the stack (DFS pattern)
+            current_state = state_list.pop() 
+        if(mode=='bfs'):
+            current_state = state_list.pop(0)
+        # if the state == the solution, return the solution (BFS pattern)
         if solution_test(current_state): 
             return current_state
-        # else, add viable states for the first empty cell onto the stack 
-        stack.extend(viable_states(current_state)) 
+        # else, add viable states for the first empty cell to the state_list 
+        state_list.extend(viable_states(current_state)) 
     return None
 
 # test if a state == the solution; hence, sum of rows, columns and quadrats each == 45 (45 = sum of 1,2,3,4,5,6,7,8,9)
@@ -137,12 +145,26 @@ for row in puzzle:
     print (row)
 # 
 
-#run the solver
+
+#run the solver (with depth first search 'dfs', which is the default)
 start_time = time.time()
 a_solution = depth_first_search(puzzle)
 elapsed_time = time.time() - start_time
 if a_solution:
-    print ("A solution:")
+    print ("A solution using dfs:")
+    for row in a_solution:
+        print (row)
+else:
+    print ("No possible solutions")
+print ("Elapsed time: " + str(elapsed_time))
+print('')
+
+#run the solver (with breadth first search 'bfs')
+start_time = time.time()
+a_solution = depth_first_search(puzzle, mode='bfs')
+elapsed_time = time.time() - start_time
+if a_solution:
+    print ("A solution using bfs:")
     for row in a_solution:
         print (row)
 else:
