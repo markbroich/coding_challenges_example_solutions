@@ -1,5 +1,6 @@
 # binary search tree 
 # class with insert, find, delete and inorder transversal
+# also method to insert count of nodes below a node + 1
 
 # expanded from: 
 # https://www.tutorialspoint.com/python_data_structure/python_binary_search_tree.htm
@@ -15,6 +16,8 @@ class Node:
         self._left = None
         self._right = None
         self._data = data
+        # count of child nodes + 1 (for self)
+        self._count = None 
         
     # Insert method to create nodes
     def insert(self, data):
@@ -102,6 +105,7 @@ class Node:
     # Print the tree inorder (so left, root, right starting from leftmost)
     def Inorder(self):
         if self._data == None:
+            print('empty tree')
         else:     
             if self._left:
                 self._left.Inorder()
@@ -109,8 +113,38 @@ class Node:
             if self._right:
                 self._right.Inorder()
     
+    
+    # return the nodecount
+    def retcount(self, anode):
+        if anode == None:
+            return 0
+        return anode._count
+    
+    
+    # count nodes attached to node +1
+    def nodecount(self): # O(2^k) where k is tree depth
+        if self == None: 
+            return 0
+        if self._left != None and self._right != None:
+            return self._left.nodecount() + self._right.nodecount() + 1
+        elif self._left != None and self._right == None:
+            return self._left.nodecount() + 1
+        elif self._left == None and self._right != None:
+            return self._right.nodecount() + 1
+        else:
+            return 1
 
-    # 
+    
+    # insert nodecount 
+    def insertNodecount(self): # O(2^k) where k is tree depth
+        if self == None:
+            return
+        self._count = self.nodecount()
+        if self._left != None:
+            self._left.insertNodecount()
+        if self._right != None:    
+            self._right.insertNodecount()
+
 
 
 # driving the class
@@ -129,6 +163,12 @@ print("")
 root.Inorder()
 print("")
 
+print('node count head old: ')
+print(root._count)
+root.insertNodecount()
+print('node count head new: ')
+print(root._count)
+
 root.deleteNode(3)
 print("")
 root.Inorder()
@@ -143,3 +183,22 @@ root.deleteNode(14)
 print("")
 root.Inorder()
 print("")
+
+
+print('node count head old: ')
+print(root._count)
+root.insertNodecount()
+print('node count head new: ')
+print(root._count)
+
+print('node count head right old: ')
+print(root._right._count)
+root.insertNodecount()
+print('node count head right new: ')
+print(root._right._count)
+
+print('node count head left old: ')
+print(root._left._count)
+root.insertNodecount()
+print('node head left new: ')
+print(root._left._count)
