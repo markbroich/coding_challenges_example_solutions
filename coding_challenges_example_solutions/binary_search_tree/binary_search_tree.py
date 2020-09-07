@@ -1,14 +1,25 @@
 # binary search tree 
-# class with insert, find, delete and inorder transversal
-# also method to insert count of nodes below a node + 1
-
+# class with insert, find, 
 # expanded from: 
 # https://www.tutorialspoint.com/python_data_structure/python_binary_search_tree.htm
+# also methods to delete, inorder transversal and insert count of nodes below a node + 1
 
 # purpose: fast inset into sorted and fast retrival
 # space O(n) where n is element count
 # time O(log(n)) for each find and insert, where n is element count
 # or O(k) where k is tree depth
+#
+# inorder transversal is O(n) where n is the node (value) count 
+
+# Last addition: is to return the value of node given an index
+# the motivation is to provide a random index to get a random node value w O(log(n)) time complexity
+# one way would be to do an inorder travelsal, write the result to
+# and array and sample the array. this would have time and space O(n) and where n is element count
+# the retNode_at_index method returns a node given a random index with O(log(n)) time 
+# and O(1) space (assuming that insertNodecount has already been run 
+# (insertNodecount inserts nodecounts with O(2^k) time where k is tree depth) and O(n) space, where n is the nodecount. 
+ 
+
 
 
 class Node:
@@ -65,7 +76,6 @@ class Node:
         #     current = current._left  
         # return current  
     
-    #
     # Given a binary search tree and a data value, this function delete the data value and returns the new root 
     def deleteNode(self, data): 
         # Base Case 
@@ -113,13 +123,11 @@ class Node:
             if self._right:
                 self._right.Inorder()
     
-    
     # return the nodecount
-    def __retcount(self, anode):
+    def retcount(self, anode):
         if anode == None:
             return 0
         return anode._count
-    
     
     # count nodes attached to node +1
     def __nodecount(self): # O(2^k) where k is tree depth
@@ -133,7 +141,6 @@ class Node:
             return self._right.__nodecount() + 1
         else:
             return 1
-
     
     # insert nodecount 
     def insertNodecount(self): # O(2^k) where k is tree depth
@@ -145,8 +152,14 @@ class Node:
         if self._right != None:    
             self._right.insertNodecount()
 
-    
-    # XXXX
+    def retNode_at_index(self, index):
+        if self == None:
+            return 'empty tree'
+        elif index == self.retcount(self._left):
+            return self._data
+        elif index < self.retcount(self._left):
+            return self._left.retNode_at_index(index)
+        return self._right.retNode_at_index(index - self.retcount(self._left) - 1)
 
 
 
@@ -158,11 +171,8 @@ root.insert(3)
 root.insert(5)
 root.insert(18)
 root.insert(13)
-print("")
 print(root.findval(7))
-print("")
 print(root.findval(14))
-print("")
 root.Inorder()
 print("")
 
@@ -172,36 +182,61 @@ root.insertNodecount()
 print('node count head new: ')
 print(root._count)
 
+print("del node 3")
 root.deleteNode(3)
-print("")
 root.Inorder()
 print("")
 
+print("del node 6")
 root.deleteNode(6)
 print("")
 root.Inorder()
 print("")
 
+print("del node 14")
 root.deleteNode(14)
 print("")
 root.Inorder()
 print("")
 
+print("del node 100")
+root.deleteNode(100)
+print("")
+root.Inorder()
+print("")
 
 print('node count head old: ')
-print(root._count)
+print(root.retcount(root))
 root.insertNodecount()
 print('node count head new: ')
-print(root._count)
+print(root.retcount(root))
 
+# directly accessing private variables for testing
 print('node count head right old: ')
-print(root._right._count)
+print(root.retcount(root._right))
 root.insertNodecount()
 print('node count head right new: ')
-print(root._right._count)
+print(root.retcount(root._right))
 
 print('node count head left old: ')
-print(root._left._count)
+print(root.retcount(root._left))
 root.insertNodecount()
 print('node head left new: ')
-print(root._left._count)
+print(root.retcount(root._left))
+
+
+print("")
+root.Inorder()
+print("")
+print("retrun count root")
+print(root.retcount(root))
+print("loop over the indices 0 to ")
+for i in range(0,root.retcount(root)):
+    print("return index ",i)
+    print(root.retNode_at_index(i))
+print("the above is the same as Inorder result, so working \n")
+
+print("return random node value with O(log(n)) where n is the nodecount")
+from random import randint
+rand_nodeindex = (randint(0,root.retcount(root)-1))
+print(root.retNode_at_index(rand_nodeindex))
