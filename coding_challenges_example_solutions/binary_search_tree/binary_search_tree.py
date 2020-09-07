@@ -51,13 +51,13 @@ class Node:
     # Given a non-empty binary search tree, return the node 
     # with minimum data value found in that tree. Note that the 
     # entire tree does not need to be searched  
-    def minValueNode(self): 
+    def __minValueNode(self): 
         if self._data == None:
             return "substree is empty" 
         elif self._left == None:
             return self
         else:
-            return self._left.self.minValueNode()
+            return self._left.self.__minValueNode()
         # or as loop when passed a node
         # current = node
         # # loop down to find the leftmost leaf 
@@ -95,7 +95,7 @@ class Node:
                 self = None
                 return temp 
             # Node with two children: Get the inorder successor (smallest in the right subtree) 
-            temp = self._right.minValueNode()  
+            temp = self._right.__minValueNode()  
             # Copy the inorder successor's content to this node 
             self._data = temp._data 
             # Delete the inorder successor 
@@ -115,22 +115,22 @@ class Node:
     
     
     # return the nodecount
-    def retcount(self, anode):
+    def __retcount(self, anode):
         if anode == None:
             return 0
         return anode._count
     
     
     # count nodes attached to node +1
-    def nodecount(self): # O(2^k) where k is tree depth
+    def __nodecount(self): # O(2^k) where k is tree depth
         if self == None: 
             return 0
         if self._left != None and self._right != None:
-            return self._left.nodecount() + self._right.nodecount() + 1
+            return self._left.__nodecount() + self._right.__nodecount() + 1
         elif self._left != None and self._right == None:
-            return self._left.nodecount() + 1
+            return self._left.__nodecount() + 1
         elif self._left == None and self._right != None:
-            return self._right.nodecount() + 1
+            return self._right.__nodecount() + 1
         else:
             return 1
 
@@ -139,11 +139,14 @@ class Node:
     def insertNodecount(self): # O(2^k) where k is tree depth
         if self == None:
             return
-        self._count = self.nodecount()
+        self._count = self.__nodecount()
         if self._left != None:
             self._left.insertNodecount()
         if self._right != None:    
             self._right.insertNodecount()
+
+    
+    # XXXX
 
 
 
