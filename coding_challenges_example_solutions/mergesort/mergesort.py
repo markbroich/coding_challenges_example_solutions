@@ -19,7 +19,9 @@
 
 # input into the merge function are two sorted arrays. return is 
 # the two inputs sorted together
-def merge(left, right):
+
+# merge has O(n) 
+def merge(left, right):  
     # init result array and pointers
     sorted_arr = [""] * (len(left) + len(right))
     i = j = k = 0
@@ -47,19 +49,24 @@ def merge(left, right):
 
 # recursive function that takes in an unsorted array and 
 # returns a sorted array after calling itself and the merge function
+# O(n 'for merge as n elements are merged' * log(n) 'for splitting as array is halved w every split' )
 def merge_sort(arr):
     # recursion base case
     if len(arr) <= 1:
         return arr
     else:
+        # start of slitting 
+        # splitting has O(log(n))
         mid = int(len(arr)/2)
         left = arr[:mid]
         right = arr[mid:]
         # recursive calls
         left = merge_sort(left)
         right = merge_sort(right)
-        # merge call
-        return merge(left, right)
+        # end of slitting 
+        #
+        # merge call has O(n) 
+        return merge(left, right) 
 
 
 # create_random_number_array
@@ -72,7 +79,7 @@ def create_random_number_array(size=10, min=-100, max=100):
 # e.g.( https://www.geeksforgeeks.org/python-program-for-bubble-sort/ )
 def bubbleSort(arr): 
     n = len(arr) 
-    for i in range(n): 
+    for i in range(0, n): 
         for j in range(0, n-1):     
         # for j in range(0, n-i-1): # Last i elements are already in place but still O(n^2) even if we exclude them when advancing i
             # Swap if the element found is greater 
