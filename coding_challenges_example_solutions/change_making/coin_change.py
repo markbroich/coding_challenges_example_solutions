@@ -52,6 +52,9 @@ print("=> nmore than necessary coins are given as change\n\n")
 
 # this brute_force algo find the optical solution if there is one 
 # it uses 3 nested loops and is currently hard coded to 3 unique coin values
+# each loop is 0 to the max count of a given coin that <= change amount (max_count = int(change/coins[i]))
+# with the smallest coin as the outer loop and coins becoming larger as coins increase
+# assumes sorted coins
 # O(change/coin1_value  * change/coin2_value * change/coin3_value), which can be quite large
 def changemaker_brute_force(change, coins):
     change_combos = 0
@@ -142,7 +145,7 @@ def minimum_coins_to_make_change(change, coins):
     # initialize arrays for 'min coin count to make change amount'
     min_coin_count = [10000]*(change+1)
     # needs to start with zero for 'min_coin_count[i - j] + 1' 
-    # to work as for amount 1 - coinvalue 1 = 0 so at index 0 we need to find zero for 0+1 = 1
+    # to work as for amount 1 - coinvalue 1 = 0 so at index 1 we need to find zero for 0+1 = 1
     min_coin_count[0] = 0
 
     # after each i (each populated i slot) will have the min coin count. 
@@ -185,9 +188,13 @@ print("minimum_coins_and_combo_to_make_change: ")
 print(minimum_coins_and_combo_to_make_change(change, coins))
 print ("so 7x2 + 1x2 = 4 coins not 10x1 + 1x6 = 7 coins as w greedy\n")
 
-
 change = 41
 coins = [4, 10, 25]
+print("minimum_coins_and_combo_to_make_change: ")
+print(minimum_coins_and_combo_to_make_change(change, coins))
+
+change = 589
+coins = [1, 5, 10, 20, 50, 100]
 print("minimum_coins_and_combo_to_make_change: ")
 print(minimum_coins_and_combo_to_make_change(change, coins))
 
@@ -225,3 +232,7 @@ coins = [1, 7, 10]
 print("coins: ", coins," change: ", change)
 loop_count_brute_force_vs_dynamic(change, coins)
 
+change = 589
+coins = [1, 5, 10, 20, 50, 100]
+print("coins: ", coins," change: ", change)
+loop_count_brute_force_vs_dynamic(change, coins)
