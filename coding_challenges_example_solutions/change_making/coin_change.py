@@ -4,7 +4,6 @@
 # We assume an infintie supply of coins to make the change
 
 
-
 # greedy approach that returns the maximum coin at every step. 
 # the greedy solution is fast and locally optimal but it may compromise the global solution
 # e.g. it may not find the globally optimal solution (min number of coins) or it may not find any solution
@@ -51,7 +50,6 @@ greedy_change(change, coins)
 print("=> nmore than necessary coins are given as change\n\n")
 
 
-
 # this brute_force algo find the optical solution if there is one 
 # it uses 3 nested loops and is currently hard coded to 3 unique coin values
 # O(change/coin1_value  * change/coin2_value * change/coin3_value), which can be quite large
@@ -90,6 +88,46 @@ print("coins: ", coins," change: ", change)
 changemaker_brute_force(change, coins)
 print("")
 
+
+# as above but works for any number of different coins using itertools.product
+def brute_change(change, coins):
+    import itertools
+
+    len_c = len(coins)
+    coin_count = 99999
+    ranges = []
+    max_loop = [0]*len_c
+
+    for i in range(0, len_c):
+        max_loop[i] = int(change/coins[i])
+        ranges.append(range(0, max_loop[i]+1))
+
+    for xs in itertools.product(*ranges):
+        cur_sum = 0
+        cur_count = 0
+        for i in range(0, len_c):
+            cur_sum = cur_sum + xs[i]*coins[i]
+            cur_count = cur_count + xs[i]
+        if cur_sum == change and coin_count > cur_count:
+                coin_count = cur_count
+
+    if coin_count == 99999:
+        return 'no solution found'
+    return coin_count
+
+print('testing brute change')
+change = 41
+coins = [4, 10, 25]
+print('can we solve this? ')
+print("coins: ", coins," change: ", change)
+print('returning ',brute_change(change, coins), ' coins')
+print("")
+
+change = 16
+coins = [1, 7, 10]
+print("coins: ", coins," change: ", change)
+print('returning ',brute_change(change, coins), ' coins')
+print("")
 
 # Dynamic programming algo 'that works for any coin set and change amount':
 # O(i x j) time where i is the change (e.g. 32c) and j is the number of different coin sizes
@@ -163,12 +201,13 @@ print(minimum_coins_and_combo_to_make_change(change, coins))
 
 
 def loop_count_brute_force_vs_dynamic(change, coins):
-    max_coins_1 = int(change/coins[0])
-    max_coins_2 = int(change/coins[1])
-    max_coins_10 = int(change/coins[2])
-    print('count combos to eval calculation: ',(max_coins_1 + 1) * (max_coins_2 + 1) * (max_coins_10 + 1))
+    count_combos = 1
+    for i in range(0, len(coins)):
+        count_combos = count_combos * (int(change/coins[i]) + 1)
+
+    print('count combos to eval calculation: ', count_combos)
     print("loops in dynamic approach: ", change*len(coins))
-    print('dynamic algo is ', round((max_coins_1 + 1) * (max_coins_2 + 1) * (max_coins_10 + 1) / change*len(coins)), ' times faster\n')
+    print('dynamic algo is ', round(count_combos / change*len(coins)), ' times faster\n')
 
 
 change = 41
