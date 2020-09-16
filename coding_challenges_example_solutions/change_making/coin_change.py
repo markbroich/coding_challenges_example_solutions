@@ -85,6 +85,13 @@ print("coins: ", coins," change: ", change)
 changemaker_brute_force(change, coins)
 print("")
 
+change = 41
+coins = [5, 10, 25]
+print('can we solve this where no solution exists? ')
+print("coins: ", coins," change: ", change)
+changemaker_brute_force(change, coins)
+print("")
+
 change = 16
 coins = [1, 7, 10]
 print("coins: ", coins," change: ", change)
@@ -126,6 +133,13 @@ print("coins: ", coins," change: ", change)
 print('returning ',brute_change(change, coins), ' coins')
 print("")
 
+change = 41
+coins = [5, 10, 25]
+print('can we solve this where no solution exists? ')
+print("coins: ", coins," change: ", change)
+print('returning ',brute_change(change, coins), ' coins')
+print("")
+
 change = 16
 coins = [1, 7, 10]
 print("coins: ", coins," change: ", change)
@@ -155,13 +169,30 @@ def minimum_coins_to_make_change(change, coins):
                 # use the small of: prior min_coin_count for change or count at index [change - current_coin] + 1 
                 # which is the current coin + the min coin count that made up the remainder
                 min_coin_count[i] = min(min_coin_count[i], min_coin_count[i - j] + 1)
-    return min_coin_count[change]
+    if min_coin_count[change] == 10000:
+        return 'no solution exists'
+    else:
+        return min_coin_count[change]
 
-print("minimum_coins_to_make_change: ")
+
 coins = [1, 7, 10]
 change = 16
-print(minimum_coins_to_make_change(change, coins))
+print("minimum_coins_to_make_change: ")
+print("coins: ", coins," change: ", change)
+print(minimum_coins_to_make_change(change, coins),"\n")
 
+change = 41
+coins = [4, 10, 25]
+print("minimum_coins_and_combo_to_make_change: ")
+print("coins: ", coins," change: ", change)
+print(minimum_coins_to_make_change(change, coins),"\n")
+
+change = 41
+coins = [5, 10, 25]
+print('can we solve this where no solution exists? ')
+print("coins: ", coins," change: ", change)
+print("minimum_coins_and_combo_to_make_change: ")
+print(minimum_coins_to_make_change(change, coins),"\n")
 
 def minimum_coins_and_combo_to_make_change(change, coins):
     # initialize arrays for 'min coin count to make change amount and coins_composition'
@@ -170,7 +201,7 @@ def minimum_coins_and_combo_to_make_change(change, coins):
 
     for i in range(1, change + 1):
         best = 10000
-        best_coins_composition = None
+        best_coins_composition = []
 
         for j in coins:
             if i - j > -1 and min_coin_count[i - j] + 1 < best:
@@ -179,22 +210,38 @@ def minimum_coins_and_combo_to_make_change(change, coins):
 
         min_coin_count[i] = best
         coins_composition[i] = best_coins_composition
+    if sum(best_coins_composition) != change:
+        return "no solution\n"
+    else: 
+        return i, best, best_coins_composition
     return i, best, best_coins_composition
 
 
 coins = [1, 7, 10]
 change = 16
+print("coins: ", coins," change: ", change)
 print("minimum_coins_and_combo_to_make_change: ")
 print(minimum_coins_and_combo_to_make_change(change, coins))
 print ("so 7x2 + 1x2 = 4 coins not 10x1 + 1x6 = 7 coins as w greedy\n")
 
+
 change = 41
 coins = [4, 10, 25]
+print("coins: ", coins," change: ", change)
 print("minimum_coins_and_combo_to_make_change: ")
-print(minimum_coins_and_combo_to_make_change(change, coins))
+print(minimum_coins_and_combo_to_make_change(change, coins),"\n")
+
+
+change = 41
+coins = [5, 10, 25]
+print("coins: ", coins," change: ", change)
+print('can we solve this where no solution exists? ')
+print("minimum_coins_and_combo_to_make_change: ")
+print(minimum_coins_and_combo_to_make_change(change, coins),"\n")
 
 change = 589
 coins = [1, 5, 10, 20, 50, 100]
+print("coins: ", coins," change: ", change)
 print("minimum_coins_and_combo_to_make_change: ")
 print(minimum_coins_and_combo_to_make_change(change, coins))
 
@@ -219,6 +266,12 @@ def loop_count_brute_force_vs_dynamic(change, coins):
 
 change = 41
 coins = [4, 10, 25]
+print("coins: ", coins," change: ", change)
+loop_count_brute_force_vs_dynamic(change, coins)
+
+change = 41
+coins = [5, 10, 25]
+print('can we solve this where no solution exists? ')
 print("coins: ", coins," change: ", change)
 loop_count_brute_force_vs_dynamic(change, coins)
 
