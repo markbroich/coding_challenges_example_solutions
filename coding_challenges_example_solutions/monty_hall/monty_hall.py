@@ -26,7 +26,7 @@ def monty_sim(door_count, stay=False):
 runs = 10000
 won_stay = 0
 won_switch = 0
-door_count = 30
+door_count = 5
 for i in range(0,runs):
     won_stay += (monty_sim(door_count, stay = True))
     won_switch += (monty_sim(door_count, stay = False))
@@ -56,6 +56,10 @@ p_correct_door = 1 /door_count * 1 /(door_count-1)
 # here B = 1 as the host will have to open all doors not chosen by the player except for the door hiding the price
 # this is the probability of the initial door beeing wrong given B OR the probability of winning when switching
 p_incorrect_door = 1/door_count * 1 
+# or in full Bayes Law:: P(A|B) = P(B | A) * P(A)  / P(B) 
+
+
+
 
 print("equation result: ")
 print("p of winning when staying: ", round(p_correct_door,4))    # should stay
