@@ -189,3 +189,14 @@ print(find_pdrome(arr))
 
 
 # Then write a second function to receive a word (or phrase) list and determine which word is the longest palindrome.
+
+
+word_list = ["madam", "racecar", "abba", "aa", "ab", "a", "acestar", "redivider", "deified", "civic", "radar", "level", "rotor", "kayak", "reviver", "Was it a car or a cat I saw?", "Mr. Owl ate my metal worm", "Do geese see God?", "Was it a cat or a car I saw?"]
+len_max_pdrom = 0
+max_pdrom = ""
+for arr in word_list:
+    if find_pdrome(arr) and len(arr) > len_max_pdrom:
+            len_max_pdrom = len(arr)
+            max_pdrom = arr
+
+print(max_pdrom)
