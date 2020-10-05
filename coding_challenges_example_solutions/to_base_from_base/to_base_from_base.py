@@ -19,6 +19,7 @@ def numberToBase(n, b):
     #digits = digits.reverse()
     digits = digits[::-1]
     return ''.join(digits)
+ 
 
 print(numberToBase(10, 2))
 print(numberToBase(24, 6))
@@ -61,3 +62,48 @@ print(binarytodecimal_pythonic('1010',2))
 print(binarytodecimal_pythonic(1010,2))
 print(binarytodecimal_pythonic(400,8))
 print("")
+
+
+
+### step by step calc using the core equations: 
+
+# TO BINARY
+# digits = []
+# while n:
+#     remaining = int(n % b)
+#     digits.append(str(remaining))
+#     n = int(n / b)
+# digits = digits[::-1]
+
+# 12 to bin = 1110
+
+#    1 1 0 0 
+# 16,8,4,2,1
+
+# so, 
+# r = 0
+# n 6
+# r = 00
+# n 3
+# r = 001
+# n 1
+# r = 0011
+# n = 0
+
+
+# TO DECIMAL
+# decimal = 0 
+# for digit in binary: 
+#     decimal = decimal*2 + int(digit) 
+
+# bin 1110 to dec = 12
+
+#    1 1 0 0 
+# 16,8,4,2,1
+
+# deci = 0
+# deci = 0*2 + 1
+# deci = 1*2 + 1
+# deci = 3*2 + 0
+# deci = 6*2 + 0
+# so, deci = 12
