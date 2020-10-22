@@ -49,7 +49,7 @@ def wordBreak(string, mySet, memoDict={}):
             else:
                 sentences = wordBreak(string[len(word):], mySet, memoDict)
                 # if it can not be solved along a recursive path, 
-                # tmp is empty and hence sentencesList stays empty
+                # sentences is empty and hence sentencesList stays empty
                 for nextword in sentences:
                     sentencesList.append(word + " " + nextword)
     # save split
