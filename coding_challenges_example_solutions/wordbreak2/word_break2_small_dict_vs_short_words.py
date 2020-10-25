@@ -37,11 +37,16 @@
 # O(n*d) where n is the length of the string and d the 
 # word count in the dictionary
 def wordBreak(string, mySet, memoDict={}):
+    sentencesList = []
+
+    # base case
+    if len(string) == 0:
+        return sentencesList
+        
     # if previously split
     if string in memoDict: 
         return memoDict[string]
-
-    sentencesList = []
+    
     for word in mySet:
         if string[:len(word)] == word:
             if len(word) == len(string): 
@@ -113,11 +118,13 @@ def findSentences(s, mySet, maxL, memoDict={}):
                 if i == lenS:
                     sentencesList.append(prefix)
                 else:                              
-                    temp = findSentences(s[i:lenS], mySet, maxL, memoDict)
-                    tmp = ''
-                    for tmp in temp:
-                        tmp = prefix + " " + tmp
-                        sentencesList.append(tmp)
+                    sentences = findSentences(s[i:lenS], mySet, maxL, memoDict)
+                    if sentences:
+                        for nextword in sentences:
+                            nextword = prefix + " " + nextword
+                            sentencesList.append(nextword)
+                    else:
+                        sentencesList.append('')     
     # save split
     memoDict[s] = sentencesList
     #print(memoDict)
