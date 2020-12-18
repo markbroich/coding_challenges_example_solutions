@@ -1,0 +1,5 @@
+# no setup needed as code uses base python3 and numpy
+
+# to run:
+python 2layerNN.py
+
