@@ -120,6 +120,7 @@ print('')
 # combination_count(4,4) = 1
 
 # which is the result for row number 5. 
+# hence, row number 5 is n = 4 selecting 0, 1, 2, 3, and 4 at a time
 
 # as an algo
 # calc number of combinations, of n choose k at a time
