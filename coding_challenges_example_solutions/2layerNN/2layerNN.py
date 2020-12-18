@@ -24,8 +24,8 @@ report = 50
 # N = number of samples or rows = 64
 # DIn = number of predictor variables or columns = 1000; 
 #   (could also be = 3 if simple example with 3 predictor variables)
-# H = number of 'intermediate' classes = 100; (could also be = 1)
-# DIn = number of final classes = 10; (could also be = 1)
+# H = number of 'intermediate' classes = 100; (could also be = 2)
+# DIn = number of final classes = 10; (could also be = 2)
 N, DIn, H, DOut = 64, 1000, 100, 10
 # x and y are the inputs (64 samples 
 # by 1000 predictor variables) and 
