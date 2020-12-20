@@ -4,12 +4,22 @@
 #  n elements * log(n) partitioning levels
 
 # space O(1) 'in place'
-# pivot first or last can cause O(n^2) if array is already sorted 
-# or reverse sorted). 
-# random pivot implement to avoid O(n^2)
+
+# Inner workings: we pick a pivot element
+# the crux is that we move all elements < pivot 
+# to the left and all all elements < pivot to the right
+# then we no longer need to compare left of pivot w right
+# of pivot and have hence ~halfed the remaining problem 
+# this is where the log(n) comes from. 
+# we then recursively call the algo on left and right of the pivot, 
+# respectivley. 
+
+# Pivot choice issue: pivot first or last can cause O(n^2) time if array is already sorted 
+# (or reverse sorted). 
+# random pivot implementation to avoid O(n^2)
 
  
-# This function takes last or random element as pivot, 
+# Specifically, this function takes last or random element as pivot, 
 # places all elements smaller than pivot before
 # pivot and all greater after pivot. 
 # Then moves pivot into correct position. 
@@ -49,8 +59,8 @@ def quickSort(arr, low, high):
         pi, arr = pickPivot(arr, low, high)
         pi, arr = partition(arr, low, high, pi)
         # recursive call on arr before and after pivot
-        quickSort(arr, low, pi-1)
-        quickSort(arr, pi+1, high)
+        arr = quickSort(arr, low, pi-1)
+        arr = quickSort(arr, pi+1, high)
     return arr
 
 
