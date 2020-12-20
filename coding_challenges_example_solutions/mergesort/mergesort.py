@@ -4,6 +4,8 @@
 # given that each merge step touches each of n items (so O(n))
 # and we do log(n) merge steps (so, O(n * log(n)) 
 # space complexity is O(n) as we copy all items 
+# (into a left and a right away and a merge array)
+# 
 
 # while space complexity is > quicksort, parallelization of mergesort
 # is relatively easy (e.g. https://gist.github.com/stephenmcd/39ded69946155930c347 )
