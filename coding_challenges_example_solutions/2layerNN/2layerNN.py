@@ -144,7 +144,6 @@ class MseGate:
 
 
 # input specs
-N, DIn, H, DOut = 64, 1000, 100, 10
 # random init of x, y, w1, w2
 np.random.seed(seed)
 x, y = randn(N, DIn), randn(N, DOut)
@@ -182,8 +181,10 @@ for t in range(epochs):
     w2 -= lr * gradW2
 
 print(t, loss, "done w", epochs, "epochs")
+print('')
 ########################################################################
 ########################################################################
+
 
 # inspired by Serena Yeung's lecture (Stanford CS): 
 # https://www.youtube.com/watch?v=d14TUNcbn1k&list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv&index=4 

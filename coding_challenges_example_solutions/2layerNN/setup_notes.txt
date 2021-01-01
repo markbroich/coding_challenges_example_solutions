@@ -2,4 +2,5 @@
 
 # to run:
 python 2layerNN.py
+python 2layerNN_activation_compare.py
 
