@@ -12,10 +12,10 @@
 # Please find out the shortest path from city A to city B. You can assume there is always a route between these two cities. Example:
 graph = { 
         'a': {'b': 2, 'c': 4, 'e': 1},
-          'b': {'a': 2, 'd': 3},
-          'c': {'a': 4, 'd': 6},
-          'd': {'c': 6, 'b': 3, 'e': 2},
-          'e': {'a': 1, 'd': 2},
+        'b': {'a': 2, 'd': 3},
+        'c': {'a': 4, 'd': 6},
+        'd': {'c': 6, 'b': 3, 'e': 2},
+        'e': {'a': 1, 'd': 2},
         }
 
 start = 'a'
@@ -56,7 +56,6 @@ end = 'd'
 def find_shortest(graph, start, end, shortest, previous, visited):
     if start not in graph:
         return -1
-    
     # get pathlength to current node
     pathlength = shortest[start]
     # at current node to visited
@@ -217,7 +216,7 @@ shortestPathSteps = myShortestPath.return_path_steps()
 print('-as class-')
 print('The shortest from ', start, ' to ', end, ' is: ', shortestPathLength, ' long.')
 print('The path is: ', shortestPathSteps)
-
+print('')
 
 
 # Known issues: 
@@ -256,3 +255,42 @@ print('The path is: ', shortestPathSteps)
 # Faster implementations:
 # there are faster implementations with Ot(e + n * log n)
 # see: https://www.geeksforgeeks.org/dijkstras-algorithm-for-adjacency-list-representation-greedy-algo-8/
+
+
+
+
+#########################
+# Bonus: If the edges are unweighted (or if we ignore the weights, the shortest path 
+# can be found using a breath first search [BFS]). Since, BFS explores one set of 
+# neighbors (or one distance ring of neighbors) at a time, the distance of the 
+# shortest path = the number of sets we explored until we found the target node. 
+
+# The current 'set of neighbors' (distance ring of neighbors) we are in when mapping 
+# a node's shortest distance from start is tracked in the 'dist' dictionary
+
+def bfs(graph, start, end, queue, dist, previous):
+    if start == end:
+        return dist, previous
+    #
+    start = queue.pop(0)
+    for node in graph[start]:
+        if node not in dist:      
+            queue.append(node)
+            dist[node] = dist[start] + 1
+            previous[node] = start
+    dist, previous = bfs(graph, start, end, queue, dist, previous)
+    return dist, previous
+
+## Run the code
+queue = [start]
+dist = {start: 0}
+previous = {start: None}
+dist, previous = bfs(graph, start, end, queue, dist, previous)
+shortestPathSteps = list_shortest_path_steps(previous, start, end)
+
+print('-as BFS-')
+print('The shortest from ', start, ' to ', end, ' is: ', dist[end], ' long.')
+print('The path is: ', shortestPathSteps)
+# Note: the BFS length of the shortest path differs from dijkstras shortest path
+# given that we report a step count ignoring path cost. 
+# Futher, the path found in our case is not unique. 
