@@ -265,6 +265,8 @@ print('')
 # neighbors (or one distance ring of neighbors) at a time, the distance of the 
 # shortest path = the number of sets we explored until we found the target node. 
 
+# Ot(n + e) and Os(n)
+
 # The current 'set of neighbors' (distance ring of neighbors) we are in when mapping 
 # a node's shortest distance from start is tracked in the 'dist' dictionary
 

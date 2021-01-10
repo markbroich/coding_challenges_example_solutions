@@ -1,0 +1,7 @@
+# no setup needed as code uses base python3
+
+# to run:
+python 2jugs_problem.py
+python 4jugs_problem.py
+
+
