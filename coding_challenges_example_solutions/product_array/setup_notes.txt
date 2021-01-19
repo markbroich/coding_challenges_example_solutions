@@ -1,0 +1,8 @@
+# conda env setup
+conda create -n numpy_env numpy
+source activate numpy_env
+
+# to run:
+python product_array_excluding_current_index.py
+
+
