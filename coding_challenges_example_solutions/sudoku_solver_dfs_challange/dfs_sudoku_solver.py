@@ -12,6 +12,7 @@
 # all the mode switch does it change from stack to queue, hence from dfs to bfs (see lines 29 to 33)
 
 import pickle 
+import copy
 import time
 
 
@@ -63,7 +64,24 @@ def solution_test(state):
 def viable_states(current_state):
     all_possible_states = []
     # get first empty cell in puzzle
+    #
     row,column = get_cell(current_state) 
+    #  
+    # could loop over all possible results of get_cell
+    # and then select the options with the smallest length
+    # get viabale numbers for cell by removing cell's invalid options
+    #
+    # options = null
+    # loop over all possible results of get_cell
+    #   newoptions = get_options(current_state, row, column)
+    #
+    #   if (options == null OR newoptions.size() < options.size()):
+    #   options = newoptions
+    #       row_ = row 
+    #       col_ = column
+    #   row = row_
+    #   column = col_
+    #
     # get viabale numbers for cell by removing cell's invalid options
     options = get_options(current_state, row, column)
     # create all possible states for empty cell using options
@@ -125,6 +143,8 @@ def filter_values(values, used):
 def state_w_current_number(current_state, number, row, column):
     # to dump an object, and load it later; does the job in 1/3 the time that deepcopy 
     new_state = pickle.loads(pickle.dumps(current_state)) 
+    # using deepcopy
+    #new_state = copy.deepcopy(current_state) 
     new_state[row][column] = number
     return(new_state)
 
