@@ -164,7 +164,7 @@ if __name__ == "__main__":
   check(expected, output)
   
   test_case_number = 7
-  n = 1.0e+09
+  n = 1.0e+06 # 1.0e+09 takes a long time
   # rolling 7 with two dice
   # the chance is 1/6 as 6 of 36 possible outcomes of a role 
   # sum to 7
