@@ -51,6 +51,62 @@ def count_subarrays_brute_forth(arr):
     return output
 
 
+# Hints:
+#
+# Complexity
+# Any solution must have time and space complexities of at 
+# least O(N) to deal with the array of N integers. 
+# A relatively simple solution considering all possible 
+# contiguous subarrays, or in fact any solution counting 
+# the valid subarrays one-by-one, would require a time 
+# complexity of at least O(N^2). 
+# However, a number of observations can allow this to be 
+# optimized down to the ideal time complexity of O(N). 
+# For example, letting L[i] be the number of valid subarrays 
+# ending at index i (useful to compute on the way to the final 
+# answer), consider how we might efficiently compute L[i] 
+# for each i from 1 to N by reusing past information rather 
+# than computing it from scratch.
+# When analyzing such a solution, note that even if we’re 
+# computing N values L[1..N], and computing any single one 
+# of those values might take on the order of N steps, the 
+# overall time complexity will not necessarily be O(N^2) - 
+# we should instead consider how many steps may occur in 
+# total across all N of them in the worst case.
+
+# Solution approach
+# Letting L[i] be the number of valid subarrays ending at 
+# index i and R[i] be the number of valid subarrays beginning 
+# at index i, we’ll have output[i] = L[i] + R[i] - 1. 
+# Computing R[1..N] is equivalent to computing L[1..N] 
+# if a were reversed, allowing us to reduce the problem 
+# to computing L[1..N] for an array of N distinct integers.
+# We can next observe that the index of the latest element 
+# to the left of the ith element which is larger than it 
+# determines which subarrays ending at index i are valid 
+# - specifically, the ones beginning to the right of that 
+# larger element. Letting G[i] be equal to the largest 
+# index j such that j < i and a[j] > a[i] (or equal to 0 
+# if there’s no such j), then L[i] = i - G[i]. We’ve now 
+# reduced the problem to computing these values G[1..N] 
+# for an array of N distinct integers.
+# Computing G[i] for each i from 1 to N is a promising 
+# approach, but we’ll still need to consider how to do 
+# so as efficiently as possible. We can observe that 
+# it’s not possible to compute G[i] purely based on 
+# the values of G[i-1], a[i-1], and a[i]; we may need 
+# more information about earlier a values as well, but 
+# would like to avoid simply scanning over all of them. 
+# Out of earlier indices j (such that j < i), we can 
+# consider which indices are worth considering as potential 
+# candidates for G[i] - for example, if there exists a 
+# pair of indices j and k such that j < k and a[j] < a[k], 
+# can index j ever be a candidate for G[i] for any i > k? 
+# If we can maintain information about the set of these 
+# possible candidate indices as we go through the array, 
+# it’s possible to efficiently determine the one that’s 
+# actually equal to G[i] for each i.
+
 
 # O(n) using a stack an 3 subsequent loops over arr
 
