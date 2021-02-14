@@ -137,6 +137,7 @@ def find_max_len_dp1(arr):
             #
             if (i-store[i-1]-2 >= 0): 
                 store[i] += (store[i-store[i-1]-2]) 
+
             else: 
                 store[i] += 0
             result = max(store[i], result) 
@@ -148,6 +149,48 @@ for i in testDict:
     print(i, " ", find_max_len_dp1(testDict[i][0]) == testDict[i][1])
 print('--------')
 
+
+# explanation of the DP lookup:
+# if (i-store[i-1]-2 >= 0):
+#     store[i] += (store[i-store[i-1]-2]) 
+
+# e.g. 
+# index   0,1,2,3,4,5,6,7
+# arr =  [(,(,),(,(,(,),)]
+# i = 7 
+# store =[0,2,0,0,0,0,2,0]
+# so, (arr[i] == ')' == True and
+# and i-store[i-1]-1 >= 0 == True and 
+# arr[i-store[i-1]-1] == '(') == True
+# hence,  
+# store =[0,2,0,0,0,0,2,2] 
+# Further, 
+# so i-store[i-1]-2 is 2 so > 0
+# hence, store[i] += (store[i-store[i-1]-2]) 
+# a = store[i]
+# b = store[i-store[i-1]-2]
+# a is 2 and b is 0
+# store[7] = 2 + 0
+
+# but if        |  
+# index   0,1,2,3,4,5,6,7
+# arr =  [),),(,),(,(,),)]
+# i = 7 
+# store =[0,0,0,2,0,0,2,0]
+# as above: 
+# ...
+# so i-store[i-1]-2 is 2 so > 0
+# hence, store[i] += (store[i-store[i-1]-2]) 
+# a = store[i]
+# b = store[i-store[i-1]-2]
+#    b is here: | 
+# store =[0,0,0,2,0,0,2,0]
+# arr =  [),),(,),(,(,),)]
+#
+# a is 2 and b is 2
+# store[7] = 2 + 0
+#
+# also see: https://leetcode.com/problems/longest-valid-parentheses/solution/ for a vid
 
 # similar to dp approach above:
 def find_max_len_dp2(arr):
