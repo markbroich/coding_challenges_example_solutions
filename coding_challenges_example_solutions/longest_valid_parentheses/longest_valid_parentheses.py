@@ -36,8 +36,10 @@ testDict['A4'] = ("((()(())", 6)
 testDict['A5'] = ("((()(()(", 2)
 testDict['A6'] = ("((()(()(())((()))", 12)
 testDict['A7'] = ("((()(()((()(()))", 8)
-
-
+# noise cases
+testDict['A8'] = ("(, ))", 2)
+testDict['A9'] = ("(, ;)", 2)
+testDict['A10'] = ("(, () x  ))", 4)
 
 
 ####################
@@ -73,6 +75,8 @@ testDict['A7'] = ("((()(()((()(()))", 8)
 #       as a base for the next valid substring.
 # 5) Return result.
 
+# this code uses 2 indices to account of none bracket characters 
+# in the input
 def find_max_len_stack(arr): 
     n = len(arr) 
     # Create a stack and push -1 
@@ -80,14 +84,15 @@ def find_max_len_stack(arr):
     stk = [] 
     stk.append(-1) 
     # Initialize result 
-    result = 0
+    result = j = 0
     # Traverse all characters of given arr 
     for i in range(n): 
         # If opening bracket, push index of it 
         if arr[i] == '(': 
-            stk.append(i) 
+            stk.append(j)
+            j += 1 
         # If closing bracket, i.e., str[i] = ')' 
-        else:    
+        elif arr[i] == ')':    
             # If the stack is not empty,
             # pop the previous opening bracket's index 
             if len(stk) != 0: 
@@ -103,15 +108,16 @@ def find_max_len_stack(arr):
             # current valid substring is more than max 
             # so far 
             if len(stk) != 0: 
-                result = max(result, i - stk[len(stk)-1]) 
+                result = max(result, j - stk[len(stk)-1]) 
             # If stack is empty. push current index as 
             # base for next valid substring (if any) 
             else: 
-                stk.append(i) 
+                stk.append(j) 
+            j += 1
     return result 
 
 
-# test cases 1-7
+# test cases 1-10
 print('find_max_len_stack')
 for i in testDict:
     print(i, " ", find_max_len_stack(testDict[i][0]) == testDict[i][1])
@@ -142,11 +148,21 @@ def find_max_len_dp1(arr):
                 store[i] += 0
             result = max(store[i], result) 
     return result 
-  
-# test cases 1-7
+
+# to noise-clean the input I can add a O(n) 
+# function
+def clean_noise(arr):
+    arrClean = []
+    for i in range(len(arr)):
+        if arr[i] == '(' or arr[i] == ')':
+            arrClean.append(arr[i])
+    return arrClean
+
+# test cases 1-10
 print('find_max_len_dp1')
 for i in testDict:
-    print(i, " ", find_max_len_dp1(testDict[i][0]) == testDict[i][1])
+    arrClean = clean_noise(testDict[i][0]) 
+    print(i, " ", find_max_len_dp1(arrClean) == testDict[i][1])
 print('--------')
 
 
@@ -209,16 +225,13 @@ def find_max_len_dp2(arr):
                 pass
     return max(store)
 
-# test cases 1-7
+
+# test cases 1-10
 print('find_max_len_dp2')
 for i in testDict:
-    print(i, " ", find_max_len_dp2(testDict[i][0]) == testDict[i][1])
+    arrClean = clean_noise(testDict[i][0]) 
+    print(i, " ", find_max_len_dp2(arrClean) == testDict[i][1])
 print('--------')
 
 
 
-# but if I add some noise, the stack solution bails so would need more work 
-print('find_max_len_dp1', find_max_len_dp1("(, ))") == 0)
-print('find_max_len_dp2', find_max_len_dp2("(, ))") == 0)
-# bails
-print('find_max_len_stack', find_max_len_stack("(, ))") == 0)
