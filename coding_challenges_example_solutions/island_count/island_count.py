@@ -166,7 +166,7 @@ class XClusterCounter:
         # below
         if i+1 <= len(A)-1:
             if A[i+1][j] =='X' and not (i+1,j) in self._myDict: 
-                    self.__explore_adj(A, i+1,j)
+                self.__explore_adj(A, i+1,j)
 
     def counter(self,A):
         #
