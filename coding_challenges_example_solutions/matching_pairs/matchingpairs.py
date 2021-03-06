@@ -34,60 +34,67 @@
 # Assuming that two arrays are of the same length, this problem is still rather hard 
 # given the range of cases one needs to account for (e.g. tests at the end)
 
+# Ot(n)
+
 def matchPairs(s,t):
     base = 0 # matched count
-    matched = {} 
-    mismatched = [] # mismatched indicies
+    matchedDict = {} 
+    misDict = {} 
+    misIndexLst = [] # misIndexLst indices
     for i in range(0, len(s)):
-        c1 = s[i]
-        c2 = t[i]
-        if c1 == c2: 
+        if s[i] == t[i]: 
             base += 1
-            matched[c1] = 1 + matched.get(c1,0)
-        else: mismatched.append(i)
+            # add matches (s[i] as key and count as value)
+            matchedDict[s[i]] = 1 + matchedDict.get(s[i],0)
+        else: 
+            # add miss matches (t[i] as key and count as value)
+            misDict[t[i]] = 1 + misDict.get(t[i],0)
+            misIndexLst.append(i)
     
     # condition I
-    # if all matched and all chars are unique, any swap will result in -2
-    if not mismatched and len(matched) == base: return base - 2
+    # if all matched, any swap will result in -2
+    if not misDict: 
+        return base - 2
 
     # condition II
-    # perfect swap for (c1, c2) if (c2, c1) is also a mismatch
+    # perfect swap for (s[i], t[i]) if (t[i], s[i]) is also a mismatch
+    # So: result + 2
     paired = set()
-    for i in mismatched:
+    for i in misIndexLst:
         if (s[i], t[i]) in paired: 
             return base + 2
         paired.add((t[i], s[i]))
 
     # condition III
     # swapping at least one char into place
-    seen = set()
-    for i in mismatched:
-        seen.add(t[i])
-    for i in mismatched: #if any(s[i] in seen for i in mismatched):
-        if s[i] in seen: 
+    # So: result + 1
+    for i in misIndexLst: 
+        if s[i] in misDict: 
             return base + 1
+    
     
     # condition IV
     # check if neutral swaps exists
     # So: result unchanged
-    if len(mismatched) >= 2:
+    if len(misIndexLst) >= 2:
         return base
-
+    
     # condition V
     # match occurs > 2 times so neutral swap 
     # So, result
-    for count in matched.values():
+    for count in matchedDict.values():
         if count >= 2:
             return base
 
     # condition VI
-    # a matched character occurs also as a mismatched character. So: result 
-    for i in mismatched:
-        if s[i] in matched:
+    # a matched character occurs also as a misIndexLst character. 
+    # They can be swapped. So: result 
+    for i in misIndexLst:
+        if s[i] in matchedDict:
             return base
 
     # condition VII
-    # only one mismatched
+    # only one misIndexLst
     # So: result -1 
     return base - 1
 
@@ -95,7 +102,7 @@ def matchPairs(s,t):
 ### Tests
 
 # condition I
-# if all matched and all chars are unique, any swap will result in -2
+# if all matched, any swap will result in -2
 s = "mno"
 t = "mno"
 print('Ia', matchPairs(s, t) == 1)
@@ -104,7 +111,7 @@ t = "abcd"
 print('Ib', matchPairs(s, t) == 2)
 
 # condition II
-# perfect swap for (c1, c2) if (c2, c1) is also a mismatch, so: result +2
+# perfect swap for (s[i], t[i]) if (t[i], s[i]) is also a mismatch, so: result +2
 s = "abcdc"
 t = "baccd"
 print('IIa', matchPairs(s, t) == 3)
@@ -120,25 +127,13 @@ print('IId', matchPairs(s, t) == 5)
 
 # condition III
 # swapping at least one char into place
+# So: result + 1
 s = "mnode"
 t = "mnoef"
 print('IIIa', matchPairs(s, t) == 4)
-s= "mnode"
-t= "mnoef"
-print('IIIb', matchPairs(s, t) == 4)
 s = "abcde"
 t = "axcbe"
-print('IIIc', matchPairs(s, t) == 4)
-
-# condition VII 
-# only one mismatched
-# So: result -1 
-s = "abcd"
-t = "abce"
-print('VIIa', matchPairs(s, t) == 2)
-s = "abc"
-t = "abd"
-print('VIIb', matchPairs(s, t) == 1)
+print('IIIb', matchPairs(s, t) == 4)
 
 # condition IV
 # check if neutral swaps exists
@@ -167,6 +162,15 @@ s = "abcda"
 t = "xbcda"
 print('VI', matchPairs(s, t) ==4)
 
+# condition VII 
+# only one mismatched
+# So: result -1 
+s = "abcd"
+t = "abce"
+print('VIIa', matchPairs(s, t) == 2)
+s = "abc"
+t = "abd"
+print('VIIb', matchPairs(s, t) == 1)
 
 
 # with a lot of inspiration from: 
