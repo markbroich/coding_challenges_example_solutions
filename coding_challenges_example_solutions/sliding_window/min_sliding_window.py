@@ -17,7 +17,7 @@
 # so, O(n!)
 
 # e.g. 
-tArr = set([1,3,2])
+tArr = [1,3,2]
 sArr = [1, 2, 2, -5, -4, 0, 1, 1, 2, 2]
 
 # calculate number of possible subarrays of sArr with len >= len(tArr)
@@ -85,13 +85,50 @@ def find_shortest_sub_On(tArr, sArr):
         return sArr[resL:resR+1]
 
 # sample data
-tArr = set([1,3,2])
+tArr = [1,3,2]
 sArr = [1, 2, 2, -5, -4, 0, 1, 1, 2, 2, 0, 3,3]
 
 print(find_shortest_sub_On(tArr, sArr))
 
+#
+## O(n^2) for min length of tArr > 1
+#
+def compare_dicts(tDict, sDict):
+    if len(tDict) == len(sDict):
+        for key in tDict:
+            if sDict[key] < tDict[key]:
+                return False
+        return True
+    return False
+#
+def find_shortest_sub_Onsquared(tArr,sArr):
+    # populate tDict
+    tDict = {}
+    for i in range(0,len(tArr)):
+        tDict[tArr[i]] = 1 + tDict.get(tArr[i],0)  
+    #
+    minL = 9999
+    iSt = iEn = 0
+    for i in range(0,len(sArr)):
+        sDict = {}
+        if sArr[i] in tDict:
+            sDict[sArr[i]] = 1 + sDict.get(sArr[i],1)  
+        #
+        for j in range(i,len(sArr)):
+            if sArr[j] in tDict:
+                sDict[sArr[j]] = 1 + sDict.get(sArr[j],0) 
+                if compare_dicts(tDict, sDict):
+                    if minL > j-i+1:
+                        minL = j-i+1
+                        iSt = i
+                        iEn = j
+    if minL == 9999:
+        return -1 
+    return sArr[iSt: iEn+1]
+#
 
 
+print(find_shortest_sub_Onsquared(tArr,sArr))
 
 # w inspiration from:
 # https://leetcode.com/problems/minimum-window-substring/discuss/1085584/O(n)-Solution-with-Detailed-Explanation
