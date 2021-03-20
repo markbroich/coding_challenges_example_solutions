@@ -78,3 +78,70 @@ print(arr)
 # print(rev_arr(arr))
 print(pancake_sort(arr))
 
+
+
+# another implementation
+
+# O(n)
+def find_largest(arr):
+    max = -999
+    iMax = 0
+    for i in range(0,len(arr)):
+        if arr[i] > max:
+            max = arr[i]
+            iMax = i
+    return iMax
+
+# O(n)
+def flip(arr):
+    mid  = int(len(arr)/2)
+    for i in range(0, mid):
+        temp = arr[i]
+        arr[i] = arr[-1-i]
+        arr[-1-i] = temp
+    return arr
+
+
+# loops n times so, Ot(n*(n+n)) so n^2, Os(1)
+def pancake_sort(arr):
+    if not arr:
+        return -1
+    
+    indexLargest = len(arr)
+    for indexSorted in range(len(arr),1,-1):
+        # find largest (above sorted)
+        indexLargest = find_largest(arr[:indexSorted])
+        # flip 0 to largest
+        arr[:indexLargest+1] = flip(arr[:indexLargest+1])
+        # flip 0 to above sorted
+        arr[:indexSorted] = flip(arr[:indexSorted])
+    return arr
+
+arr = [1,5,4,3,2]
+output = [1,2,3,4,5] 
+print(pancake_sort(arr) == output)
+print(pancake_sort(arr))
+
+
+## another implementation using recursion and in build methods
+
+# O(n) using in builds
+def flip(arr, k):
+    if k == 0:
+        return arr    
+    return list(reversed(arr[:k])) + arr[k:]
+
+# using recursion Ot(n^2) Os(n) in stack memory
+def pancake_sort(arr):  
+    n = len(arr)
+    
+    if n == 0:
+      return []
+  
+    m = max(arr)
+    m_index = arr.index(m)
+    arr = flip(arr, m_index+1)
+    arr = flip(arr, n) # now maximal element is at the end
+    return pancake_sort(arr[:n-1]) + [arr[-1]]
+  
+ 
