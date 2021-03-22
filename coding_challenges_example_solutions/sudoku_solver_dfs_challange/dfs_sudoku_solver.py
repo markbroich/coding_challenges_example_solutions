@@ -31,8 +31,9 @@ def depth_first_search(puzzle, mode='dfs'):
             # take the last state off the stack (DFS pattern)
             current_state = state_list.pop() 
         if(mode=='bfs'):
+            # take the last state off the stack (BFS pattern)
             current_state = state_list.pop(0)
-        # if the state == the solution, return the solution (BFS pattern)
+        # if the state == the solution, return the solution 
         if solution_test(current_state): 
             return current_state
         # else, add viable states for the first empty cell to the state_list 
@@ -64,7 +65,6 @@ def solution_test(state):
 def viable_states(current_state):
     all_possible_states = []
     # get first empty cell in puzzle
-    #
     row,column = get_cell(current_state) 
     #  
     # could loop over all possible results of get_cell
@@ -214,3 +214,117 @@ print ("Elapsed time: " + str(elapsed_time))
 
 
 # many speed upgrades are possible :)
+
+
+## the below solution using dfs but first fills the cells 
+# where the range of possible values is smallest.
+# it also uses recursion thereby eliminating the need for 
+# pickel / deepcopy as the board is automatically copies into 
+# stack memory as part of the recursion stack
+
+
+# (code below provided by Pramp.com)
+
+import math
+
+def getCandidates(board, row, col):
+    # For some empty cell board[row][col], what possible
+    # characters can be placed into this cell
+    # that aren't already placed in the same row,
+    # column, and sub-board?
+    # At the beginning, we don't have any candidates
+    candidates = []
+    # For each character add it to the candidate list
+    # only if there's no collision, i.e. that character 
+    # doesn't already exist in the same row, column 
+    # and sub-board. Notice the top-left corner of (row, col)'s 
+    # sub-board is (row - row%3, col - col%3).
+    mylist = ['1','2','3','4','5','6','7','8','9']
+    for chr in mylist:
+        collision = False
+        for i in range(9):
+            if board[row][i] == chr: 
+              collision = True
+              break
+            elif  board[i][col] == chr: 
+              collision = True
+              break
+            elif board[(row - row % 3) + int(math.floor(i / 3))][(col - col % 3) + i % 3] == chr:
+              collision = True
+              break
+        if not collision:
+          candidates.append(chr)
+    return candidates
+ 
+def sudoku_solve(board):
+    # For each empty cell, consider 'newCandidates', the
+    # set of possible candidate values that can
+    # be placed into that cell.
+    row = -1 
+    col = -1
+    candidates = None 
+    for r in range(9):
+        for c in range(9):
+            if (board[r][c] == '.'):
+                newCandidates = getCandidates(board, r, c)
+                # Then, we want to keep the smallest
+                # sized 'newCandidates', plus remember the
+                # position where it was found
+                if (candidates == None or len(newCandidates) < len(candidates)):
+                    candidates = newCandidates
+                    row = r 
+                    col = c
+    # If we have not found any empty cell, then
+    # the whole board is filled already
+    if (candidates == None):
+        return True
+    # For each possible value that can be placed
+    # in position (row, col), let's
+    # place that value and then recursively query
+    # whether the board can be solved.  If it can,
+    # we are done. 
+    for val in candidates:
+        board[row][col] = val
+        if (sudoku_solve(board)):
+            return True
+        # The tried value val didn't work so restore  
+        # the (row, col) cell back to '.'
+        board[row][col] = '.'
+    # Otherwise, there is no value that can be placed
+    # into position (row, col) to make the
+    # board solved
+    return False
+
+# same board as puzzle above to compare speed
+board = [['.','3','9','.','.','.','1','2','.'],['.','.','.','9','.','7','.','.','.'],['8','.','.','4','.','1','.','.','6'],['.','4','2','.','.','.','7','9','.'],['.','.','.','.','.','.','.','.','.'],['.','9','1','.','.','.','5','4','.'],['5','.','.','1','.','9','.','.','3'],['.','.','.','8','.','5','.','.','.'],['.','1','4','.','.','.','8','7','.']]
+start_time = time.time()
+print ("A dfs solution first filling cells w fewest possible values and using recursion:")
+print(sudoku_solve(board)==True)
+elapsed_time = time.time() - start_time
+print ("Elapsed time: " + str(elapsed_time))
+print('... interestingly this solution does not run faster than dfs using a loop w pickle / deepcopy, perhaps due to the recursion overhead.')
+print('next step would be to bring the cell prioritization into the loop version of dfs and measure the performance chance (increase). ')
+
+def tests():
+    print('a few unit tests:')
+    board = [[".",".",".","7",".",".","3",".","1"],["3",".",".","9",".",".",".",".","."],[".","4",".","3","1",".","2",".","."],[".","6",".","4",".",".","5",".","."],[".",".",".",".",".",".",".",".","."],[".",".","1",".",".","8",".","4","."],[".",".","6",".","2","1",".","5","."],[".",".",".",".",".","9",".",".","8"],["8",".","5",".",".","4",".",".","."]]
+    # Expected: True
+    print(sudoku_solve(board)== True)
+    board = [[".","8","9",".","4",".","6",".","5"],[".","7",".",".",".","8",".","4","1"],["5","6",".","9",".",".",".",".","8"],[".",".",".","7",".","5",".","9","."],[".","9",".","4",".","1",".","5","."],[".","3",".","9",".","6",".","1","."],["8",".",".",".",".",".",".",".","7"],[".","2",".","8",".",".",".","6","."],[".",".","6",".","7",".",".","8","."]]
+    # Expected: False
+    print(sudoku_solve(board) == False)
+    # Test Case #3
+    board = [[".","2","3","4","5","6","7","8","9"],["1",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."]]
+    # Test Case #4
+    print(sudoku_solve(board) == False)
+    board =[[".",".","5",".",".","2",".",".","."],[".",".","9",".","4","7",".","2","."],[".",".","8",".","5","6",".",".","1"],[".",".",".",".",".","8","3","4","."],[".",".",".",".",".",".",".",".","6"],[".",".",".",".","3",".","1","8","."],[".","2",".",".",".",".",".",".","."],[".","9",".",".","8",".","6","7","."],["3",".","6","5","7",".",".",".","."]]
+    # Test Case #5
+    print(sudoku_solve(board) == True)
+    board =[[".",".","3","8",".",".","4",".","."],[".",".",".",".","1",".",".","7","."],[".","6",".",".",".","5",".",".","9"],[".",".",".","9",".",".","6",".","."],[".","2",".",".",".",".",".","1","."],[".",".","4",".",".","3",".",".","2"],[".",".","2",".",".",".","8",".","."],[".","1",".",".",".",".",".","5","."],["9",".",".",".",".","7",".",".","3"]]
+    # Test Case #6
+    print(sudoku_solve(board) == True)
+    board = [[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."],[".",".",".",".",".",".",".",".","."]]
+    print(sudoku_solve(board) == True)
+
+# run tests
+tests()
