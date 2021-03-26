@@ -79,26 +79,35 @@ The regex must match the entire stringing, not a substringing
 
 ## w/o star brute forth
 def regex_matcher_bf(string, pat): # output -- boolean 
-    if not pat:  # ran out of pattern? 
-        return not string # ran out of string? 
+    if not pat:  # done w pattern? 
+        return not string # done w string? 
     if string and pat[0] in {string[0], "."}: # still have string and char in pat in string or '.'
         return regex_matcher(string[1:], pat[1:])
     return False
 
 ## w star brute forth
 def regex_matcher_w_star(string, pat): 
-    if not pat:  # ran out of pattern? 
-        return not string # ran out of string? 
+    if not pat:  # done w pattern? 
+        return not string # done w string? 
     #
     firstMatch = string and pat[0] in {string[0], "."} # still have string and char in pat in string or '.'
     if len(pat) >= 2 and pat[1] == '*': 
-        # the * can be either ignored by moving the pat by 2 chars or used (if firstmatch) by moving to the next string char
+        # the * can be either ignored by moving the pat by 2 chars or used (if firstmatch) 
+        # by moving to the next string char
         return regex_matcher(string, pat[2:]) or firstMatch and regex_matcher(string[1:], pat)
     elif firstMatch:
         return regex_matcher(string[1:], pat[1:])
     return False
+# brute forth complexity
+# Ot((S+P)2^(S+P/2) [see leetcode for details!] 
+# Os(S^2+P^2) where S and P are length of string and pattern, respectively. 
 
 
+## top down dynamic programming (memorization)
+# Ot(S*P) given that each call combination of i and j 
+# is done up to once (where S and P are length of string and pattern, respectively). 
+# Os(S*P) to store all the i,j combinations of S and P, respectively. 
+#  
 ## w star memo 
 def regex_matcher_memo(string, pat, demo=False): 
     memo = {}
@@ -111,9 +120,11 @@ def regex_matcher_memo(string, pat, demo=False):
             print(i, j, memo[(i,j)])
         # not already known subtree
         if not (i,j) in memo:
-            firstMatch = i < len(string) and pat[j] in {string[i], "."} # still have string and char in pat in string or '.'
+            # still have string and char in pat in string or '.'
+            firstMatch = i < len(string) and pat[j] in {string[i], "."} 
             if j+1 < len(pat) and pat[j+1] == '*': 
-                # the * can be either ignored by moving the pat by 2 chars or used (if firstmatch) by moving to the next string char
+                # the * can be either ignored by moving the pat by 2 chars or used (if firstmatch) 
+                # by moving to the next string char
                 ret = topDown(i,j+2) or firstMatch and topDown(i+1,j) 
             elif firstMatch:
                 ret = topDown(i+1,j+1)
@@ -138,6 +149,33 @@ string =    'mississippi'
 pat =       'mis*s*s*is*b*'
 regex_matcher_memo(string, pat, True)
 print()
+
+
+# bottom up dynamic programming (populating a table w all parts of the solution)
+# is not as efficient for one off runs as top down memorization as only a few 
+# subproblems overlap but bottom up derives and stores all i,j combnations. 
+# top down only stores the i,j combinations it has encountered. 
+
+# O(S*P) for both time and space complexity
+# Code by leetcode:
+
+def regex_matcher_bot_up(string, pat):
+    # array of false w dims len(string)+1 * len(pat)+1 
+    tab = [[False] * (len(pat) + 1) for _ in range(len(string) + 1)]
+    tab[-1][-1] = True
+
+    # build up solution by looping backwards 
+    # (from the len(string), len(pat) -2 
+    # position in tab)
+    for i in range(len(string), -1, -1):
+        for j in range(len(pat) - 1, -1, -1):
+            first_match = i < len(string) and pat[j] in {string[i], '.'}
+            if j+1 < len(pat) and pat[j+1] == '*':
+                tab[i][j] = tab[i][j+2] or first_match and tab[i+1][j]
+            else:
+                tab[i][j] = first_match and tab[i+1][j+1]
+    # retrun 0,0 of tab once all has been populated 
+    return tab[0][0]
 
 
 
@@ -262,6 +300,9 @@ regex_matcher = regex_matcher_w_star
 testing(regex_matcher_w_star)
 
 regex_matcher = regex_matcher_memo
+testing(regex_matcher)
+
+regex_matcher = regex_matcher_bot_up
 testing(regex_matcher)
 
 
