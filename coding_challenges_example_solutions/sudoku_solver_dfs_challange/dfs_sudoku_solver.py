@@ -6,15 +6,14 @@
 
 # for some background on the popular game of Sudoku: https://en.wikipedia.org/wiki/Sudoku
 
-
 # the code can also be run as breadth first search, with is a simple flick of 'mode' switch in the search function. 
 # breadth first search is slower than depth first search when solving Sudoku but the code modification is minimal:
 # all the mode switch does it change from stack to queue, hence from dfs to bfs (see lines 29 to 33)
 
+
 import pickle 
 import copy
 import time
-
 
 # depth_first_search stack method (when mode='dfs') or breadth_first_search method (when mode='bfs')
 def depth_first_search(puzzle, mode='dfs'):
@@ -328,3 +327,10 @@ def tests():
 
 # run tests
 tests()
+
+
+# the brute forth time complexity is O(9^k) where k is the number of unfilled cells. Space complexity is O(n*k) 
+# where n is the board size and k is the number  of unfilled cells since at max we need to store k matrices of n cells. 
+# the time and space complexity of DFS and when first exploring cells w few valid numbers is much smaller. 
+# the tree has a depth of k but its width gets such smaller under dfs and w prioritizing cells w few options as many banches 
+# get pruned. 
