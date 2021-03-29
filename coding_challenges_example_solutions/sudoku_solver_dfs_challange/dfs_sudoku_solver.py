@@ -8,15 +8,19 @@
 
 # the code can also be run as breadth first search, with is a simple flick of 'mode' switch in the search function. 
 # breadth first search is slower than depth first search when solving Sudoku but the code modification is minimal:
-# all the mode switch does it change from stack to queue, hence from dfs to bfs (see lines 29 to 33)
+# all the mode switch does it change from stack to queue, hence from dfs to bfs (see lines 32 to 36)
 
+# by default the first cell w options (where one ore multiple numbers can be inserted is used). 
+# We can increase the efficiency by first filling cells w few options, which prunes the tree
+# we can do so by setting fewestOption=True and the runtime comparison shows that filling cells w
+# few options first runs in < 1/2 the time.  
 
 import pickle 
 import copy
 import time
 
 # depth_first_search stack method (when mode='dfs') or breadth_first_search method (when mode='bfs')
-def depth_first_search(puzzle, mode='dfs'):
+def depth_first_search(puzzle, mode='dfs', fewestOption=False):
     start_state = puzzle
     # if the start == the solution, return
     if solution_test(start_state):  
@@ -36,7 +40,7 @@ def depth_first_search(puzzle, mode='dfs'):
         if solution_test(current_state): 
             return current_state
         # else, add viable states for the first empty cell to the state_list 
-        state_list.extend(viable_states(current_state)) 
+        state_list.extend(viable_states(current_state, fewestOption=fewestOption)) 
     return None
 
 # test if a state == the solution; hence, sum of rows, columns and quadrats each == 45 (45 = sum of 1,2,3,4,5,6,7,8,9)
@@ -61,47 +65,61 @@ def solution_test(state):
     return True
 
 # return list of valid states
-def viable_states(current_state):
+def viable_states(current_state, fewestOption=False):
     all_possible_states = []
-    # get first empty cell in puzzle
-    row,column = get_cell(current_state) 
-    #  
-    # could loop over all possible results of get_cell
-    # and then select the options with the smallest length
-    # get viabale numbers for cell by removing cell's invalid options
+    # get empty cells in puzzle
+    cells = get_cells(current_state) 
     #
-    # options = null
-    # loop over all possible results of get_cell
-    #   newoptions = get_options(current_state, row, column)
+    if fewestOption: # get row, column and options of cell w fewest options
+        row, column, options = fewest_options(cells, current_state)
+    else: # use the first cell that has viable options
+        row, column = cells[0]
+        # get viabale numbers for cell by removing cell's invalid options
+        options = get_options(current_state, row, column)
     #
-    #   if (options == null OR newoptions.size() < options.size()):
-    #   options = newoptions
-    #       row_ = row 
-    #       col_ = column
-    #   row = row_
-    #   column = col_
-    #
-    # get viabale numbers for cell by removing cell's invalid options
-    options = get_options(current_state, row, column)
     # create all possible states for empty cell using options
     for number in options: 
         possible_state = state_w_current_number(current_state, number, row, column)
         all_possible_states.append(possible_state)
     return (all_possible_states) 
 
-# return first empty cell on grid (marked with 0)
-def get_cell(state):
+# return list of empty cells on grid (marked with 0)
+def get_cells(state):
+    cells=[]
     for row in range(9):
         for column in range(9):
             if state[row][column] == 0:
-                return row, column
+                cells.append((row, column))
+    return cells
+
+# get row, column and options of cell w fewest options
+def fewest_options(cells, current_state):
+    minOptLen = 99
+    minOpt = []
+    minRow = minColumn = ''
+    for i in range(0,len(cells)):
+        row, column = cells[i]
+        # get viabale numbers for cell by removing cell's invalid options
+        options = get_options(current_state, row, column)
+        # find cell w fewer options 
+        if len(options) > 0 and len(options) < minOptLen:
+            minOptLen = len(options)
+            minOpt = options
+            minRow, minColumn = cells[i]
+            if minOptLen == 1: # if only 1 option, use it
+                break
+    return minRow, minColumn, minOpt
 
 # get viabale numbers for cell by removing cell's invalid options
 def get_options(current_state, row, column):
     # defines valid numbers in puzzle
     options = range(1, 9+1) 
     options = filter_row(options, current_state, row)
+    if len(options) == 0:
+        return options
     options = filter_col(options, current_state, column)
+    if len(options) == 0:
+        return options
     options = filter_quad(options, current_state, row, column)
     return options
 
@@ -165,12 +183,12 @@ for row in puzzle:
 # 
 
 
-#run the solver (with depth first search 'dfs', which is the default)
+#run the solver (with depth first search 'dfs', which is the default and using the first cell w options)
 start_time = time.time()
-a_solution = depth_first_search(puzzle)
+a_solution = depth_first_search(puzzle, mode='dfs', fewestOption=False)
 elapsed_time = time.time() - start_time
 if a_solution:
-    print ("A solution using dfs:")
+    print ("A solution using dfs and using the first cell w options:")
     for row in a_solution:
         print (row)
 else:
@@ -178,19 +196,44 @@ else:
 print ("Elapsed time: " + str(elapsed_time))
 print('')
 
-#run the solver (with breadth first search 'bfs')
+#run the solver (with depth first search 'dfs', which is the default and using the cell w fewest options)
 start_time = time.time()
-a_solution = depth_first_search(puzzle, mode='bfs')
+a_solution = depth_first_search(puzzle, mode='dfs', fewestOption=True)
 elapsed_time = time.time() - start_time
 if a_solution:
-    print ("A solution using bfs:")
-    for row in a_solution:
-        print (row)
+    print ("A solution using dfs and using the cell w fewest options:")
+    # for row in a_solution:
+    #    print (row)
 else:
     print ("No possible solutions")
 print ("Elapsed time: " + str(elapsed_time))
+print('')
 
+#run the solver (with breadth first search 'bfs' and using the first cell w options)
+start_time = time.time()
+a_solution = depth_first_search(puzzle, mode='bfs', fewestOption=False)
+elapsed_time = time.time() - start_time
+if a_solution:
+    print ("A solution using bfs and using the first cell w options:")
+    # for row in a_solution:
+    #    print (row)
+else:
+    print ("No possible solutions")
+print ("Elapsed time: " + str(elapsed_time))
+print('')
 
+#run the solver (with breadth first search 'bfs' and using the cell w options)
+start_time = time.time()
+a_solution = depth_first_search(puzzle, mode='bfs', fewestOption=True)
+elapsed_time = time.time() - start_time
+if a_solution:
+    print ("A solution using bfs and using the cell w fewest options:")
+    # for row in a_solution:
+    #     print (row)
+else:
+    print ("No possible solutions")
+print ("Elapsed time: " + str(elapsed_time))
+print('')
 
 # logic why DFS is preferred over BFS:
 
@@ -212,7 +255,7 @@ print ("Elapsed time: " + str(elapsed_time))
 # DFS may go deep down false paths but may also find the solution in as little as L steps 
 
 
-# many speed upgrades are possible :)
+
 
 
 ## the below solution using dfs but first fills the cells 
@@ -301,7 +344,7 @@ print ("A dfs solution first filling cells w fewest possible values and using re
 print(sudoku_solve(board)==True)
 elapsed_time = time.time() - start_time
 print ("Elapsed time: " + str(elapsed_time))
-print('... interestingly this solution does not run faster than dfs using a loop w pickle / deepcopy, perhaps due to the recursion overhead.')
+print('... interestingly this solution does not run faster than dfs using 1st cell w options and a loop w pickle / deepcopy, perhaps due to the recursion overhead.')
 print('next step would be to bring the cell prioritization into the loop version of dfs and measure the performance chance (increase). ')
 
 def tests():
@@ -330,7 +373,7 @@ tests()
 
 
 # the brute forth time complexity is O(9^k) where k is the number of unfilled cells. Space complexity is O(n*k) 
-# where n is the board size and k is the number  of unfilled cells since at max we need to store k matrices of n cells. 
+# where n is the board size and k is the number of unfilled cells since at max we need to store k matrices of n cells. 
 # the time and space complexity of DFS and when first exploring cells w few valid numbers is much smaller. 
 # the tree has a depth of k but its width gets such smaller under dfs and w prioritizing cells w few options as many banches 
 # get pruned. 
