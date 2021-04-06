@@ -38,6 +38,10 @@ def find_grants_cap(grantsArray, newBudget):
     if sum(sortedgrantsArray) < newBudget:
         return sortedgrantsArray[0] # largest is cap
     
+    # if smallerst > newBudget
+    if sortedgrantsArray[-1] > newBudget:
+        return newBudget/len(sortedgrantsArray) # all grants get the same
+
     # pad w a zero (a zero budget grant)
     sortedgrantsArray.append(0)
     
@@ -56,6 +60,8 @@ def find_grants_cap(grantsArray, newBudget):
             # so cap must be > largest none-capped
             if cap > sortedgrantsArray[i+1]: 
                     return cap
+    # 
+    
 
         
 # input:  grantsArray = [2, 100, 50, 120, 1000], newBudget = 190
@@ -98,6 +104,10 @@ def testing():
     newBudget = 16
     output = 4
     print(8, find_grants_cap(grantsArray, newBudget) == output)
+    grantsArray = [101, 102, 103, 104, 105] 
+    newBudget = 100
+    output = 20
+    print(9, find_grants_cap(grantsArray, newBudget) == output)
 
 # run tests
 testing()
