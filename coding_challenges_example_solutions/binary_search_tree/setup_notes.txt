@@ -3,4 +3,5 @@
 # to run:
 python binary_search_tree.py
 
-
+# and
+python bst_inorder_successor.py
