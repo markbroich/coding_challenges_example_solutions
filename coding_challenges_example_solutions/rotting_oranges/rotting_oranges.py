@@ -22,7 +22,7 @@ def rot_timer(grid):
     # BFS where the stack is dictRrecent
     # the recently rotten oranges
 
-    # Ot(k) where k is the number of fresh
+    # Ot(k) where k is the number of oranges
     # I loop over recent rotten, which used to be fresh and
     # if I get to rot all the sum of recent rotten over time will be 
     # number of fresh but in each loop I only deal w a subset of 
@@ -92,4 +92,79 @@ testing()
 
 
 
-## will add code version using queue w delineator ... 
+## Code version using queue w delineator ... 
+
+def rot_timer(grid):
+    timeToRot = 0
+
+    # populate Q
+    # Ot(n*m)
+    Q, dictF = pop_q_dict(grid)
+    # add cycle end marker
+    Q.append((-1,-1))
+
+    # keep rotting while recent rot in queue 
+    # Ot(k) where k is the number of oranges
+    while Q:
+        curRot = Q.pop(0)
+        #
+        i, j = curRot
+        # try rot adjacent
+        for adj in [(i-1,j), (i+1,j), (i,j-1), (i,j+1)]:
+            if possible_loc(adj):
+                if adj in dictF:
+                    del dictF[adj]
+                    Q.append(adj)
+        #
+        # if cycle end marker and newly rot in queue
+        # increment timer and append cycle end marker
+        if curRot == (-1,-1) and Q:
+            timeToRot += 1
+            Q.append((-1,-1))
+    # 
+    if not dictF: # if all fresh have been rotten
+        return timeToRot
+    return -1
+
+#
+def possible_loc(adj):
+    i, j = adj
+    if i < 0:
+        return False
+    elif i >= len(grid):
+        return False
+    elif j < 0:
+        return False
+    elif j >= len(grid[0]):
+        return False
+    return True
+
+#    
+def pop_q_dict(grid):
+    Q = []
+    dictF = {}
+    # loop over rows
+    for i in range(0,len(grid)):
+        # loop over cols
+        for j in range(0,len(grid[0])):
+            if grid[i][j] == 2:
+                Q.append((i,j))
+            if grid[i][j] == 1:
+                dictF[(i,j)] = 1
+    return Q, dictF
+
+
+
+print()
+grid = [[2,1,1],[1,1,0],[0,1,1]]
+expected = 4
+print(rot_timer(grid)==expected)
+
+grid = [[2,1,1],[0,1,1],[1,0,1]]
+expected = -1
+print(rot_timer(grid)==expected)
+
+grid = [[0,2]]
+expected = 0
+print(rot_timer(grid)==expected)
+
