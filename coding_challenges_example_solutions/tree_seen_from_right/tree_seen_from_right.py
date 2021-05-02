@@ -54,8 +54,7 @@ class Node():
         if self.left:
             maxdepth, nodeLst = self.left.right_view(depth, maxdepth, nodeLst)
         return maxdepth, nodeLst
-
-        #
+    #
     def right_view_loop(self):
         depth = maxdepth = 0 
         nodeLst = []
@@ -82,6 +81,33 @@ class Node():
                 break
             #   
         return nodeLst
+    #
+    def right_view_bfs(self):
+        if self.data == None:
+            return -1
+        #
+        # create queue w seperator 
+        Q = [self, float('inf')]
+        rightViewLst = []
+        while True:
+            while Q[0] != float('inf'):
+                current = Q.pop(0)   
+                if not current.left == None:
+                    Q.append(current.left)
+                if not current.right == None:
+                    Q.append(current.right)  
+            # 
+            # when end of level 
+            Q.pop(0)  
+            rightViewLst.append(current.data)
+            #
+            # if more to do
+            if Q:
+                Q.append(float('inf'))
+            else:
+                break
+
+        return rightViewLst
 
 
 
@@ -107,3 +133,5 @@ print('right_view recursion')
 print(nodeLst)
 print('right_view loop')
 print(tree.right_view_loop())
+print('right_view bfs')
+print(tree.right_view_bfs())
