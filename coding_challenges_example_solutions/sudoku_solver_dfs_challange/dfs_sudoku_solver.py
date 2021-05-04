@@ -152,6 +152,17 @@ def filter_quad(options, state, row, column):
     options = filter_values(options, in_block)
     return options    
 
+# # how to index the squares in sudoku
+# # loop over i (e,g, the row index)
+# for i in range(9):
+# # get the lower bound of the e.g. square in row direction
+# # e.g. subtracting the modolo 'to cut the overhand'
+#     # print(int(i/3)*3) # or print(i-i%3)
+#     lb = i-i%3
+#     # loop over indices in square by addinf 0,1,2 to the lower bound
+#     for j in range(0,3):        
+#         print('index:', i, 'lower bound:', lb, 'addition:', j, 'location: ', lb + j)
+
 # return set of valid numbers from values that do not appear in used
 def filter_values(values, used):
     return [number for number in values if number not in used]
@@ -377,3 +388,60 @@ tests()
 # the time and space complexity of DFS and when first exploring cells w few valid numbers is much smaller. 
 # the tree has a depth of k but its width gets such smaller under dfs and w prioritizing cells w few options as many banches 
 # get pruned. 
+
+
+# some code to check the boxes:
+# check quadrant and return false if total is invalid
+def check_box(col, row, num):
+    for block_row in range(0,3):
+        for block_column in range(0,3):
+            if board[(row - row%3) + block_row][(col - col%3) + block_column] == num:
+                return False
+
+
+## other options for indexing the square:
+def sq_indexing():
+    # using %
+    for row in range(0,9):
+        r_sq = row - row % 3
+        for col in range(0,8):
+            c_sq = col - col % 3
+            print()
+            for i in range(0,3):
+                for j in range(0,3):
+                    print(r_sq+i, c_sq+j)
+
+    # sample
+    for row in range(0,9):
+        r_sq = row - row % 3
+        print()
+        print('row',row)
+        for i in range(0,3):
+            print(r_sq+i,)
+
+    # using lookup
+    lookup = {
+            0:[0,1,2],
+            1:[0,1,2],
+            2:[0,1,2],
+            3:[3,4,5],
+            4:[3,4,5],
+            5:[3,4,5],
+            6:[6,7,8],
+            7:[6,7,8],
+            8:[6,7,8]
+    }
+
+    # sample
+    for i in range(0,9):
+        for j in lookup[i]:
+            print(i,j)
+        print()
+
+    for r in range(0,9):
+        for c in range(0,9):
+            for i in lookup[r]:
+                for j in lookup[c]:
+                    print(i, j)
+                print()
+
