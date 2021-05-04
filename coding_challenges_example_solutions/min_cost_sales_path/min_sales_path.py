@@ -66,7 +66,22 @@ class Node:
       minCost = min(cost, minCost)
     return minCost+node.cost
 
+  def find_min_cost_dfs_rec_path(self, node):
+    n = len(node.children)
+    if (n == 0):
+      return node.cost, [node.cost]
+    # 
+    path = []
+    minCost = float('inf')
+    for i in range(0,n):
+      cost, pathRet = self.find_min_cost_dfs_rec_path(node.children[i])
+      if cost < minCost:
+        minCost = cost
+        path = pathRet 
+    return minCost+node.cost, path+[node.cost]
+
 def main():
+  # Test1
   tree = Node(0)
 
   n1 = Node(5)
@@ -90,13 +105,58 @@ def main():
   #    4              1
   #  /
   # 2
-
+  print('test1')
   print(tree.find_min_cost() == 7)
-  print()
   print(tree.find_min_cost_prune() == 7)
-  print()
   print(tree.find_min_cost_dfs_rec(tree) == 7)
+  print(tree.find_min_cost_dfs_rec_path(tree) == (7,[1,6,0]))
   
+  #
+  # Test2
+  tree = Node(0)
+
+  n1 = Node(5)
+  n2 = Node(3)
+  n3 = Node(6)
+
+  n4 = Node(4)
+  n5 = Node(2)
+  n6 = Node(0)
+  n7 = Node(1)
+  n8 = Node(5)
+
+
+  n9 = Node(1)
+  n10 = Node(10)
+
+  n11 = Node(1)
+
+  tree.children = [n1,n2,n3]
+  n1.children = [n4]
+  n2.children = [n5,n6]
+  n3.children = [n7,n8]
+
+  n5.children = [n9]
+  n6.children = [n10]
+  
+  n9.children = [n11]
+
+  #            0
+  #         /  |  \
+  #       5    3   6
+  #     /   /  |   | \ 
+  #    4   2   0   1   5
+  #      /    /
+  #     1    10
+  #     | 
+  #     1
+  # 
+  print('test2')
+  print(tree.find_min_cost() == 7)
+  print(tree.find_min_cost_prune() == 7)
+  print(tree.find_min_cost_dfs_rec(tree) == 7)
+  print(tree.find_min_cost_dfs_rec_path(tree) == (7,[1,1,2,3,0]))
+
 if __name__ == "__main__":
     main()
     
@@ -119,6 +179,10 @@ if __name__ == "__main__":
 
 
 
+
+# A good followup question is how to alter the function in order to return all the Sales Paths with 
+# minimal cost in an array. Another good question, is how to use the function above to determine the 
+# longest or shortest Sales Path path.
 
 
 
