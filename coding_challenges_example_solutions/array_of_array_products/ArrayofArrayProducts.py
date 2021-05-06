@@ -14,6 +14,21 @@
 # output: [84, 24, 56, 42] # by calculating: [7*3*4, 2*3*4, 2*7*4, 2*7*3
 
 
+# Ot(n^2)
+# Os(n)
+def brute_forth(arr):
+  res = [1]*len(arr)
+  for i in range(0, len(arr)):
+    for j in range(0, len(arr)):
+      if i != j:
+        res[i] *= arr[j]
+  return res
+
+arr = [2,7,3,4] 
+expected = [84, 24, 56, 42]
+print(brute_forth(arr) == expected)
+
+
 # Ot(n)
 # Os(n)
 
@@ -58,6 +73,7 @@ print(array_of_array_products(arr) == expected)
 
 #
 
+
 # why does this work? 
 # manually computing the solution  
 #     [2,   3,   4,  5]
@@ -80,3 +96,6 @@ print(array_of_array_products(arr) == expected)
 # [60,      40,    30,    24]
 
 # w inspiration from Pramp and geek for geeks. tnx :) 
+
+
+
