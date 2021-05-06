@@ -63,8 +63,34 @@ def find_grants_cap(grantsArray, newBudget):
     # 
     
 
-        
-# input:  grantsArray = [2, 100, 50, 120, 1000], newBudget = 190
+
+# forward direction
+# Ot(nlogn) Os(n)
+def min_impact_cut_fw(grantsArray, newBudget):
+    grantsArray.sort()
+    prior = float('inf')
+    mySum = 0
+    capLst = []
+    for i in range(0,len(grantsArray)):
+        mySum = sum(grantsArray[0:i]) 
+        remain = newBudget - mySum
+        cap = remain / (len(grantsArray)-i)
+        if cap >= prior:
+            capLst.append(cap)
+        prior = grantsArray[i]
+    
+    # if below budget, use max ask as cap
+    if mySum+grantsArray[-1] < newBudget:      
+        return grantsArray[-1]
+    
+    # if cap needed, use max of cap options
+    if capLst:
+        return max(capLst)
+    
+    # else, split budget by grantcount
+    return newBudget /  len(grantsArray)
+
+
 
 
 def testing():
@@ -72,44 +98,73 @@ def testing():
     newBudget = 10
     output = 2
     print(0, find_grants_cap(grantsArray, newBudget) == output)
+    print(0, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [2, 100, 50, 120, 1000] 
     newBudget = 190
     output = 47
     print(1, find_grants_cap(grantsArray, newBudget) == output)
+    print(1, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [2,4]
     newBudget = 3
     output = 1.5
     print(2, find_grants_cap(grantsArray, newBudget) == output)
+    print(2, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [2,4,6]
     newBudget = 3
     output = 1
     print(3, find_grants_cap(grantsArray, newBudget) == output)
+    print(3, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [2,100,50,120,167]
     newBudget = 400
     output = 128.0
     print(4, find_grants_cap(grantsArray, newBudget) == output)
+    print(4, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [21,100,50,120,130,110]
     newBudget = 140
     output = 23.8
     print(5, find_grants_cap(grantsArray, newBudget) == output)
+    print(5, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [210,200,150,193,130,110,209,342,117]
     newBudget = 1530
     output = 211
     print(6, find_grants_cap(grantsArray, newBudget) == output)
+    print(6, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [2, 2, 2, 2, 2] 
     newBudget = 12
     output = 2
     print(7, find_grants_cap(grantsArray, newBudget) == output)
+    print(7, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [2, 2, 4, 2, 2] 
     newBudget = 16
     output = 4
     print(8, find_grants_cap(grantsArray, newBudget) == output)
+    print(8, min_impact_cut_fw(grantsArray, newBudget) == output)
     grantsArray = [101, 102, 103, 104, 105] 
     newBudget = 100
     output = 20
     print(9, find_grants_cap(grantsArray, newBudget) == output)
+    print(9, min_impact_cut_fw(grantsArray, newBudget) == output)
+    grantsArray = [101, 102, 103, 888, 105] 
+    newBudget = 99999999
+    output = 888
+    print(10, find_grants_cap(grantsArray, newBudget) == output)
+    print(10, min_impact_cut_fw(grantsArray, newBudget) == output)
 
 # run tests
 testing()
 
 
+
+
+grantsArray = [2, 100, 50, 120, 1000] 
+newBudget = 190
+output = 47
+
+
+
+# grantsArray = [2, 50, 100, 120, 1000] 
+# cap = budget - sum(grantsArray[:i+1] 
+# cap = cap / (len - i) 
+# if cap > grantsArray[i]:
+
+# edge cases?? 
