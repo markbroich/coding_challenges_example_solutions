@@ -13,7 +13,8 @@
 # A = [1,2,4,5,6,7,9]
 
 
-
+# Ot(valid elements in A + len valid elements in B)
+# Os(valid elements in A + len valid elements in B)
 def merge(A,B):
     if not A:
         A = []
@@ -45,7 +46,8 @@ def merge(A,B):
     return A
 
 
-
+# Ot(valid elements in A + len valid elements in B)
+# Os(1)
 def merge_in_place_mine(A, B):
     if not A:
         A = []
@@ -73,7 +75,8 @@ def merge_in_place_mine(A, B):
         A[i] = B[0]
     return A
 
-
+# Ot((valid elements in A + len valid elements in B)^2)
+# Os(1)
 def merge_in_place_traditional(A, B):
     if not A:
         A = []
@@ -115,7 +118,6 @@ def testing():
     B = [2,6,7]
     print(merge_in_place_traditional(A,B) == [1,2,4,5,6,7,9])
 
-
     # # ex2 
     A = []
     B = []
@@ -126,7 +128,6 @@ def testing():
     A = []
     B = []
     print(merge_in_place_traditional(A,B) == [])
-
 
     # # ex3 
     A = [None, None]
