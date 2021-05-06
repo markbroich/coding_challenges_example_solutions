@@ -74,7 +74,7 @@ def testing():
     expected = 4
     print(rot_timer(grid)==expected)
 
-    grid = [[2,1,1],[0,1,1],[1,0,1]]
+    grid = [[2,2,1],[0,1,1],[1,0,1]]
     expected = -1
     print(rot_timer(grid)==expected)
     # Explanation: The orange in the bottom left corner (row 2, column 0) is never rotten, 
