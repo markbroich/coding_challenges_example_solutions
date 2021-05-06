@@ -65,20 +65,47 @@ class Node:
       cost = self.find_min_cost_dfs_rec(node.children[i])
       minCost = min(cost, minCost)
     return minCost+node.cost
+  #
+  # A good follow up question, is how to determine the 
+  # longest or shortest Sales Path path.
+  def find_min_max_cost_dfs_rec(self, node):
+    n = len(node.children)
+    if (n == 0):
+      return node.cost, node.cost
+    # 
+    minCost = float('inf')
+    maxCost = float('-inf')
+    for i in range(0,n):
+      newMinCost, newMaxCost = self.find_min_max_cost_dfs_rec(node.children[i])
+      minCost = min(newMinCost, minCost)
+      maxCost = max(newMaxCost, maxCost)
+    return minCost+node.cost, maxCost+node.cost
 
+  # A good followup question is how to 
+  # return all the Sales Paths with 
+  # minimal cost in an array
   def find_min_cost_dfs_rec_path(self, node):
     n = len(node.children)
     if (n == 0):
       return node.cost, [node.cost]
     # 
+    #
     path = []
     minCost = float('inf')
     for i in range(0,n):
       cost, pathRet = self.find_min_cost_dfs_rec_path(node.children[i])
+      if cost == minCost:
+        path = [path+[node.cost]] + [pathRet+[node.cost]]
       if cost < minCost:
         minCost = cost
         path = pathRet 
-    return minCost+node.cost, path+[node.cost]
+    #
+    # if nested lst
+    if any(isinstance(i, list) for i in path):
+      return minCost+node.cost, path 
+    else:
+      return minCost+node.cost, path +[node.cost]
+
 
 def main():
   # Test1
@@ -110,7 +137,7 @@ def main():
   print(tree.find_min_cost_prune() == 7)
   print(tree.find_min_cost_dfs_rec(tree) == 7)
   print(tree.find_min_cost_dfs_rec_path(tree) == (7,[1,6,0]))
-  
+  print(tree.find_min_max_cost_dfs_rec(tree) == (7,20))
   #
   # Test2
   tree = Node(0)
@@ -155,7 +182,8 @@ def main():
   print(tree.find_min_cost() == 7)
   print(tree.find_min_cost_prune() == 7)
   print(tree.find_min_cost_dfs_rec(tree) == 7)
-  print(tree.find_min_cost_dfs_rec_path(tree) == (7,[1,1,2,3,0]))
+  print(tree.find_min_cost_dfs_rec_path(tree) == (7,[[1,1,2,3,0],[1,6,0]]))
+  print(tree.find_min_max_cost_dfs_rec(tree) == (7,13))
 
 if __name__ == "__main__":
     main()
@@ -176,14 +204,6 @@ if __name__ == "__main__":
 # proportional to n. If this was a binary search tree, 
 # the depth would be log(n) but in an ordinary tree, all 
 # n nodes may be on one branch. 
-
-
-
-
-# A good followup question is how to alter the function in order to return all the Sales Paths with 
-# minimal cost in an array. Another good question, is how to use the function above to determine the 
-# longest or shortest Sales Path path.
-
 
 
 
