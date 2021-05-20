@@ -66,7 +66,7 @@ def root_binarysearch_a(x, n, thr=0.001):
         lo = apxRoot
       else:
         hi = apxRoot
-      apxRoot = lo + ((hi - lo) / 2)
+      apxRoot = (lo + hi) / 2
     #
     return apxRoot
   
@@ -86,7 +86,7 @@ def root_binarysearch_b(x, n, thr=0.001):
     hi = x
     #
     while True:
-        mid = lo+((hi-lo)/2)
+        mid = (lo + hi) / 2
         xhat = mid**n
         diff = xhat - x
         #
@@ -156,7 +156,7 @@ def testing(thr=0.001):
     expected = 5.429
     print(abs(root_binarysearch_a(x, n) - expected) < thr)
     print(abs(root_binarysearch_b(x, n) - expected) < thr)
-    
+
 testing()
 
 
