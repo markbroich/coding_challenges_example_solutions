@@ -61,7 +61,9 @@ def root_binarysearch_a(x, n, thr=0.001):
     hi = x
     #
     apxRoot = lo + ((hi - lo) / 2)
+
     while abs(apxRoot**n - x) > thr:
+      # or while (apxRoot - lo >= thr):
       if apxRoot**n < x:
         lo = apxRoot
       else:
