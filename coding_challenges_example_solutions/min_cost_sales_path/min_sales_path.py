@@ -34,26 +34,6 @@ class Node:
             Q.append((child, child.cost + cost))
     return min(costLst)
   #
-  def find_min_cost_prune(self):
-    if not self.children:
-      return self.cost
-    
-    Q = [(self, self.cost)]
-    #  
-    costLst = []
-    while Q:
-        node, cost = Q.pop(0)
-        for child in node.children:
-            if not child.children:
-                costLst.append(child.cost + cost)
-            # 
-            # only que if path cost < min cost so far
-            if(len(costLst) > 0 and 
-                child.cost + cost > min(costLst)):
-                continue
-            else:
-                Q.append((child, child.cost + cost))
-    return min(costLst)
   #
   def find_min_cost_dfs_rec(self, node):
     n = len(node.children)
@@ -134,7 +114,6 @@ def main():
   # 2
   print('test1')
   print(tree.find_min_cost() == 7)
-  print(tree.find_min_cost_prune() == 7)
   print(tree.find_min_cost_dfs_rec(tree) == 7)
   print(tree.find_min_cost_dfs_rec_path(tree) == (7,[1,6,0]))
   print(tree.find_min_max_cost_dfs_rec(tree) == (7,20))
@@ -180,7 +159,6 @@ def main():
   # 
   print('test2')
   print(tree.find_min_cost() == 7)
-  print(tree.find_min_cost_prune() == 7)
   print(tree.find_min_cost_dfs_rec(tree) == 7)
   print(tree.find_min_cost_dfs_rec_path(tree) == (7,[[1,1,2,3,0],[1,6,0]]))
   print(tree.find_min_max_cost_dfs_rec(tree) == (7,13))
@@ -194,9 +172,6 @@ if __name__ == "__main__":
 # # of a node in that wide layer. The max que length will 
 # be between > 1 and < n, so Os(n). 
 
-# The prune option will not explore a branch further if the 
-# cost > cur min cost hence, the number of nodes will be 
-# fewer but the runtime will still be O(n) at max
     
 # When using recursion (and dfs), the function is applied to 
 # every node once. Hence Ot(n). 
