@@ -55,10 +55,35 @@ def root(x, n, step=0.001, thr=0.001):
 
 # O(log(x))
 # O(1)
-def root_binarysearch(x, n, thr=0.001):
+def root_binarysearch_a(x, n, thr=0.001):
     #
-    lo = 0
-    hi = max(1,x)
+    lo = thr
+    hi = x
+    #
+    apxRoot = lo + ((hi - lo) / 2)
+    while abs(apxRoot**n - x) > thr:
+      if apxRoot**n < x:
+        lo = apxRoot
+      else:
+        hi = apxRoot
+      apxRoot = lo + ((hi - lo) / 2)
+    #
+    return apxRoot
+  
+print(root(27, 3))
+
+print(root(3, 2))
+
+# input:  x = 9, n = 2
+# output: 3
+# 3**2 = 9 or 3**n = x
+
+
+
+def root_binarysearch_b(x, n, thr=0.001):
+    #
+    lo = thr
+    hi = x
     #
     while True:
         mid = lo+((hi-lo)/2)
@@ -81,48 +106,57 @@ def testing(thr=0.001):
     x = 7
     n = 3
     expected = 1.913
-    print(abs(root_binarysearch(x, n) - expected) < thr)
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
 
     x = 9
     n = 2
     expected = 3
-    print(abs(root_binarysearch(x, n) - expected) < thr)
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
     
     x = 870
     n = 3
     expected = 9.54640270936004
-    print(abs(root_binarysearch(x, n) - expected) < thr)
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
 
     x = 4
     n = 2
     expected = 2
-    print(abs(root_binarysearch(x, n) - expected) < thr)
-    
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
+
     x = 27
     n = 3
     expected = 3
-    print(abs(root_binarysearch(x, n) - expected) < thr)
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
 
     x = 16
     n = 4
     expected = 2
-    print(abs(root_binarysearch(x, n) - expected) < thr)
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
 
     x = 3
     n = 2
     expected = 1.732
-    print(abs(root_binarysearch(x, n) - expected) < thr)
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
 
     x = 10
     n = 3
     expected = 2.154
-    print(abs(root_binarysearch(x, n) - expected) < thr)
-    
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
+
     x = 160
     n = 3
     expected = 5.429
-    print(abs(root_binarysearch(x, n) - expected) < thr)
-
+    print(abs(root_binarysearch_a(x, n) - expected) < thr)
+    print(abs(root_binarysearch_b(x, n) - expected) < thr)
+    
 testing()
 
 
