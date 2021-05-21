@@ -110,6 +110,67 @@ print(count_islands(grid), " islands found")
 print("")
 
 
+#### island count using a Q
+def get_number_of_islands_loop(binaryMatrix):
+  cnt = 0
+  cLen = len(binaryMatrix[0])
+  rLen = len(binaryMatrix)
+  if rLen == 1 and cLen	 == 1:
+    if binaryMatrix[0][0] == 1:
+      return 1
+    else: 
+      return cnt
+  #
+  Q = []   
+  for x in range(0,cLen):
+    for y in range(0,rLen):
+      if binaryMatrix[y][x] == 1:
+        cnt += 1
+        Q.append((x,y))
+        while Q:
+            x, y = Q.pop(0)
+            binaryMatrix[y][x] = 0
+            for i,j in [(-1,0),(1,0),(0,-1),(0,1)]:
+                if is_valid(x+i,y+j,cLen,rLen):
+                    if binaryMatrix[y+j][x+i] == 1:
+                        Q.append((x+i,y+j))
+  return cnt
+
+def is_valid(x,y,cLen,rLen):
+    if (y < 0 or y >= rLen  
+        or x < 0 or x >= cLen):
+        return False
+    return True    
+
+
+
+def testing():
+    binaryMatrix =[[0]]
+    exp = 0
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    binaryMatrix = [[1]]
+    exp = 1
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    binaryMatrix = [[1,0,1,0]]
+    exp = 2
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    binaryMatrix = [[1,0,1,0],[0,1,1,1],[0,0,1,0]]
+    exp = 2
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    binaryMatrix = [[1,0,1,0],[0,1,1,1],[0,0,1,0],[1,1,0,0],[0,1,0,1]]
+    exp = 4
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    binaryMatrix = [[0,1,0,1,0],[0,0,1,1,1],[1,0,0,1,0],[0,1,1,0,0],[1,0,1,0,1]]
+    exp = 6
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    binaryMatrix = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
+    exp = 1
+    print(get_number_of_islands_loop(binaryMatrix) == exp)
+        
+
+testing()
+
+
 # solved again w slightly different approach. 
 
 # just to recall: 
