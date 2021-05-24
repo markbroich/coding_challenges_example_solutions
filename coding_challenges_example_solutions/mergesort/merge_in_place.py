@@ -75,6 +75,36 @@ def merge_in_place_mine(A, B):
         A[i] = B[0]
     return A
 
+# better solution (easier to read code) by Blake Adkins 
+# moving pointers from right to left
+def mergeLists(A, B):
+  if len(B) == 0:
+    return A
+  if A[0] is None:
+    return B
+  if not A:
+    return []
+  
+  insertionPtr = len(A) - 1
+  pA = 0
+  pB = len(B) - 1
+  for i in range(len(A)):
+    if A[i] is not None:
+      pA = i
+    else:
+      break
+      
+  while pB >= 0:
+    if A[pA] < B[pB]:
+      A[insertionPtr] = B[pB]
+      pB -= 1
+    else:
+      A[insertionPtr] = A[pA]
+      pA -= 1
+    insertionPtr -= 1
+    
+  return A
+
 # Ot((valid elements in A + len valid elements in B)^2)
 # Os(1)
 def merge_in_place_traditional(A, B):
