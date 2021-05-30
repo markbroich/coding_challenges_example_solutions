@@ -1,3 +1,9 @@
+# heap class
+# Os(n)
+# push Ot(log(n))
+# pop Ot(log(n))
+# peak O(1)
+
 # public methods: push, peak, pop
 # private methods: __swap, __floatUp, __bubbleDown
 
@@ -65,14 +71,13 @@ class Heap():
             elif not self.minHeap and self.heap[idxToSwap] < self.heap[rc]:
                 idxToSwap = rc
         # if swap is needed
-        #print('i',idx, idxToSwap)
         if idx != idxToSwap:
             self.__swap(idx, idxToSwap)
             self.__bubbleDown(idxToSwap)    
 
 items = [5,7,-1,10]
+# maxheap
 myHeap = Heap(items, min=False)
-#myHeap = Heap(items, min=True)
 print('peak', myHeap.peak())
 myHeap.push(100)
 print(myHeap.pop())
@@ -81,6 +86,7 @@ print(myHeap.pop())
 print(myHeap.pop())
 print(myHeap.pop())
 
+# minheap
 myHeap = Heap(items, min=True)
 print('peak', myHeap.peak())
 myHeap.push(100)
@@ -91,5 +97,39 @@ print(myHeap.pop())
 print(myHeap.pop())
 
 
+
+
 # w inspiration from: 
 # https://github.com/joeyajames
+
+
+# using inbuild (called heapq)
+import heapq
+
+
+# minheap (all goes in and comes out as negative as in build is 
+# imlemented as maxheap) 
+items = [5,7,-1,10]
+for i in range(0,len(items)):
+    items[i] = -items[i]
+heapq.heapify(items)
+print()
+print('peak', -items[0])
+heapq.heappush(items,-100)
+while items:
+    print(-heapq.heappop(items))
+
+# maxheap (no modification needed)
+items = [5,7,-1,10]
+heapq.heapify(items)
+print()
+print('peak', items[0])
+heapq.heappush(items,100)
+while items:
+    print(heapq.heappop(items))
+
+
+
+
+
+
