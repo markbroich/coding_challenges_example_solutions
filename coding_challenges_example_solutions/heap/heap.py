@@ -107,8 +107,8 @@ print(myHeap.pop())
 import heapq
 
 
-# minheap (all goes in and comes out as negative as in build is 
-# imlemented as maxheap) 
+# Maxheap (all goes in and comes out as negative as in build is 
+# imlemented as minheap) 
 items = [5,7,-1,10]
 for i in range(0,len(items)):
     items[i] = -items[i]
@@ -119,7 +119,7 @@ heapq.heappush(items,-100)
 while items:
     print(-heapq.heappop(items))
 
-# maxheap (no modification needed)
+# MinHeap (no modification needed)
 items = [5,7,-1,10]
 heapq.heapify(items)
 print()
