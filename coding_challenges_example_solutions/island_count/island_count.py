@@ -142,29 +142,69 @@ def is_valid(x,y,cLen,rLen):
         return False
     return True    
 
+###
+# also in a loop bus using a dict so 
+# Os(count of island cells)
+def island_count_loop_dict(grid):
+    landSet = pop_land_set(grid)
+    #
+    islandCnt = 0
+    for r in range(0,len(grid)):
+        for c in range(0,len(grid[0])):
+            if (r,c) in landSet:
+                islandCnt +=1
+                stack = [(r,c)]
+                dfs(stack,landSet)
+    return islandCnt
+
+def dfs(stack,landSet):
+    while stack:
+        r,c = stack.pop()
+        if (r,c) in landSet:
+            landSet.remove((r,c))
+            for rx, cx in [(1,0),(-1,0),(0,1),(0,-1)]:
+                if (r+rx,c+cx) in landSet:
+                    stack.append((r+rx,c+cx))
+    # print('island explored')
+
+def pop_land_set(grid):
+    landSet = set()
+    for r in range(0, len(grid)):
+        for c in range(0, len(grid[0])):
+            if grid[r][c] == 1:
+                landSet.add((r,c))
+    return landSet
+
 
 
 def testing():
     binaryMatrix =[[0]]
     exp = 0
+    print(island_count_loop_dict(binaryMatrix) == exp)
     print(get_number_of_islands_loop(binaryMatrix) == exp)
     binaryMatrix = [[1]]
     exp = 1
+    print(island_count_loop_dict(binaryMatrix) == exp)
     print(get_number_of_islands_loop(binaryMatrix) == exp)
     binaryMatrix = [[1,0,1,0]]
     exp = 2
+    print(island_count_loop_dict(binaryMatrix) == exp)
     print(get_number_of_islands_loop(binaryMatrix) == exp)
     binaryMatrix = [[1,0,1,0],[0,1,1,1],[0,0,1,0]]
     exp = 2
+    print(island_count_loop_dict(binaryMatrix) == exp)
     print(get_number_of_islands_loop(binaryMatrix) == exp)
     binaryMatrix = [[1,0,1,0],[0,1,1,1],[0,0,1,0],[1,1,0,0],[0,1,0,1]]
     exp = 4
-    print(get_number_of_islands_loop(binaryMatrix) == exp)
+    print(island_count_loop_dict(binaryMatrix) == exp)
+    print(get_number_of_islands_loop(binaryMatrix) == exp)    
     binaryMatrix = [[0,1,0,1,0],[0,0,1,1,1],[1,0,0,1,0],[0,1,1,0,0],[1,0,1,0,1]]
     exp = 6
+    print(island_count_loop_dict(binaryMatrix) == exp)
     print(get_number_of_islands_loop(binaryMatrix) == exp)
     binaryMatrix = [[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,1]]
     exp = 1
+    print(island_count_loop_dict(binaryMatrix) == exp)
     print(get_number_of_islands_loop(binaryMatrix) == exp)
         
 
