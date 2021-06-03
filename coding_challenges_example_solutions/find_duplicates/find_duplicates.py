@@ -18,27 +18,19 @@
 # I assume that there are no duplicates in each array
 
 
-# Ot(1)
-# Os(1)
-def find_sh_ln(arr1,arr2):
-    if len(arr1) < len(arr2):
-        return arr1, arr2
-    else:
-        return arr2, arr1
 
-# Ot(len(shorter array) + len(longer array))
+# Ot(len(arr1) + len(arr2))
 # Os( len(duplicates))
 def find_dubs_two_pnts(arr1, arr2):
-    # find shorter and longer
-    shorter, longer = find_sh_ln(arr1,arr2)
-
     resLst = []
     i = j = 0
-    while i < len(shorter) and j < len(longer):        
-        if shorter[i] == longer[j]:
-            resLst.append(shorter[i])
+    while i < len(arr1) and j < len(arr2):        
+        if arr1[i] == arr2[j]:
+            resLst.append(arr1[i])
             i += 1
             j += 1
+        elif arr1[i] < arr2[j]:
+            i += 1
         else:
             j += 1
     
@@ -63,6 +55,13 @@ def find_dubs_binsearch(arr1, arr2):
             resLst.append(shorter[i])
     return resLst
 
+# Ot(1)
+# Os(1)
+def find_sh_ln(arr1,arr2):
+    if len(arr1) < len(arr2):
+        return arr1, arr2
+    else:
+        return arr2, arr1
 
 # O(log(len(arr)))
 def bi_search(arr, val):
