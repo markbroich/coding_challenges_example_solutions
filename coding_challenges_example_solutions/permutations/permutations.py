@@ -62,6 +62,7 @@ import pickle
 def make_permuted_stack(nums):
   if len(nums) == 1:
       return [nums]
+  
   res = []
   S = [([],nums)]
   while S:
@@ -80,6 +81,28 @@ def make_permuted_stack(nums):
 
 
 
+def permute_backtrack(nums):
+    """
+    provided by leetcode (backtracking)
+    not set up to deal w duplicates
+    """
+    def backtrack(first = 0):
+        # if all integers are used up
+        if first == n:
+            output.append(nums[:])
+        for i in range(first, n):
+            # place i-th integer first 
+            # in the current permutation
+            nums[first], nums[i] = nums[i], nums[first]
+            # use next integers to complete the permutations
+            backtrack(first + 1)
+            # backtrack
+            nums[first], nums[i] = nums[i], nums[first]
+    
+    n = len(nums)
+    output = []
+    backtrack()
+    return output
 
 
 def testing():
@@ -88,18 +111,21 @@ def testing():
     exp =  [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
     print(permute_rec(nums) == exp) 
     print(sorted(make_permuted_stack(nums)) == exp) 
+    print(sorted(permute_backtrack(nums)) == exp) 
 
     # Example 2:
     nums = [0,1]
     exp =  [[0,1],[1,0]]
     print(permute_rec(nums) == exp) 
     print(sorted(make_permuted_stack(nums)) == exp) 
+    print(sorted(permute_backtrack(nums)) == exp) 
 
     # Example 3:
     nums = [1]
     exp =  [[1]]
     print(permute_rec(nums) == exp) 
     print(sorted(make_permuted_stack(nums)) == exp) 
+    print(sorted(permute_backtrack(nums)) == exp) 
 
     # Example 4:
     nums = [1,1,3,4]
