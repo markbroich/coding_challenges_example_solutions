@@ -79,6 +79,21 @@ class BinarySearchTree:
                 else:
                     currentNode = currentNode.right
 
+    def inorder_traversal(self):
+        stack = []
+        currentNode = self.root
+        while True:
+            if currentNode:
+                stack.append(currentNode)
+                currentNode = currentNode.left
+            elif stack:
+              currentNode = stack.pop()
+              print(currentNode.key)
+              currentNode = currentNode.right
+            else:
+              break
+        return '' 
+
 
 ######################################### 
 # Driver program to test above function #
@@ -98,6 +113,9 @@ bst.insert(5)
 bst.insert(12)
 bst.insert(11)
 bst.insert(14)
+
+print()
+print(bst.inorder_traversal())
 
 result = bst.find_largest_smaller_key(9)
 print("Largest smaller number of 9 is %d " % (result))
