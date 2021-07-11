@@ -39,6 +39,14 @@
 # 0 < n
 # [output] float
 
+# x tp the power of n
+# rather than x**n 
+def power(x ,n):
+  res = 1
+  for i in range(n):
+    res *= x
+  return res
+
 
 import numpy as np
 
@@ -47,7 +55,7 @@ import numpy as np
 # large step may never converge
 def root(x, n, step=0.001, thr=0.001):
     for i in np.arange(thr,x,step):
-        xhat = i**n
+        xhat = power(i ,n)
         if abs(xhat - x) < thr:
             break
     return i
@@ -61,10 +69,9 @@ def root_binarysearch_a(x, n, thr=0.001):
     hi = x
     #
     apxRoot = lo + ((hi - lo) / 2)
-
-    while abs(apxRoot**n - x) > thr:
+    while abs(power(apxRoot, n)  - x) > thr:
       # or while (apxRoot - lo >= thr):
-      if apxRoot**n < x:
+      if power(apxRoot, n) < x:
         lo = apxRoot
       else:
         hi = apxRoot
@@ -89,7 +96,7 @@ def root_binarysearch_b(x, n, thr=0.001):
     #
     while True:
         mid = (lo + hi) / 2
-        xhat = mid**n
+        xhat = power(mid, n) 
         diff = xhat - x
         #
         if abs(diff) < thr:
