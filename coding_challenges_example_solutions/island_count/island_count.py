@@ -110,7 +110,7 @@ print(count_islands(grid), " islands found")
 print("")
 
 
-#### island count using a Q
+#### island count using a stack
 def get_number_of_islands_loop(binaryMatrix):
   cnt = 0
   cLen = len(binaryMatrix[0])
@@ -121,19 +121,19 @@ def get_number_of_islands_loop(binaryMatrix):
     else: 
       return cnt
   #
-  Q = []   
+  stack = []   
   for x in range(0,cLen):
     for y in range(0,rLen):
       if binaryMatrix[y][x] == 1:
         cnt += 1
-        Q.append((x,y))
-        while Q:
-            x, y = Q.pop(0)
+        stack.append((x,y))
+        while stack:
+            x, y = stack.pop(0)
             binaryMatrix[y][x] = 0
             for i,j in [(-1,0),(1,0),(0,-1),(0,1)]:
                 if is_valid(x+i,y+j,cLen,rLen):
                     if binaryMatrix[y+j][x+i] == 1:
-                        Q.append((x+i,y+j))
+                        stack.append((x+i,y+j))
   return cnt
 
 def is_valid(x,y,cLen,rLen):
@@ -292,3 +292,108 @@ A = [ ["O","O","O","X","O","O","O"], ["O","X","O","O","O","X","O"], ["O","X","O"
 XC1 = XClusterCounter()
 print(XC1.counter(A))
 
+
+
+# island count revised: 
+
+# using either recursion or stack and while loop
+def count_islands(grid, rec=True):
+    iCnt = 0
+    for r in range(0,len(grid)):
+        for c in range(0,len(grid[0])):
+            if grid[r][c] == 1:
+                iCnt += 1
+                if rec: 
+                    grid = dfs_rec(grid, r, c)
+                else:
+                    grid = dfs(grid, r, c)
+    return iCnt
+
+def dfs(grid, r, c):
+    grid[r][c] = 0 # sink
+    stack = [(r, c)]
+    neigh = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    while stack:
+        r, c = stack.pop()
+        for rm, cm in neigh:
+            r_, c_ = r+rm, c+cm
+            if (r_ >= 0 and r_ < len(grid) and
+               c_ >= 0 and c_ < len(grid[0])):
+                if grid[r_][c_] == 1:
+                    stack.append((c_, r_))
+                    grid[r_][c_] = 0 # sink
+    return grid
+
+def dfs_rec(grid, r, c):
+    if grid[r][c] == 0:
+        return grid
+    grid[r][c] = 0 # sink
+    neigh = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    for rm, cm in neigh:
+        r_, c_ = r+rm, c+cm
+        if (r_ >= 0 and r_ < len(grid) and
+            c_ >= 0 and c_ < len(grid[0])):
+            if grid[r_][c_] == 1:
+                grid = dfs_rec(grid, r_, c_)
+    return grid
+
+# using recursion
+# ###### Example 1
+grid = [[1, 1, 0, 0, 1],
+        [1, 1, 0, 0, 1],
+        [0, 1, 0, 0, 0],
+        [1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0]]
+# expected: 4 islands
+# (top left island has size 5; top right = 2, bottom left = 2, bottom right = 1)
+print(count_islands(grid) == 4)
+
+###### Example 2
+grid = [[1, 0, 0, 1],
+        [1, 0, 1, 0],
+        [0, 1, 0, 0],
+        [1, 0, 0, 1]]
+print(count_islands(grid) == 6)
+
+###### Example 3
+grid = [[1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]]
+print(count_islands(grid) == 1)
+
+###### Example 4
+grid = [[0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]]
+print(count_islands(grid) == 0)
+print()
+
+# using loop
+# ###### Example 1
+grid = [[1, 1, 0, 0, 1],
+        [1, 1, 0, 0, 1],
+        [0, 1, 0, 0, 0],
+        [1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0]]
+# expected: 4 islands
+# (top left island has size 5; top right = 2, bottom left = 2, bottom right = 1)
+print(count_islands(grid, False) == 4)
+
+###### Example 2
+grid = [[1, 0, 0, 1],
+        [1, 0, 1, 0],
+        [0, 1, 0, 0],
+        [1, 0, 0, 1]]
+print(count_islands(grid, False) == 6)
+
+###### Example 3
+grid = [[1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1]]
+print(count_islands(grid, False) == 1)
+
+###### Example 4
+grid = [[0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]]
+print(count_islands(grid, False) == 0)
