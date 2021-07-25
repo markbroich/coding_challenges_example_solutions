@@ -5,3 +5,12 @@ python binary_search_tree.py
 
 # and
 python bst_inorder_successor.py
+
+# and 
+python bst_inorder_trav_wo_rec.py
+
+# and 
+python validate_bst.py
+
+# and 
+python bst_sum_two_nodes.py
