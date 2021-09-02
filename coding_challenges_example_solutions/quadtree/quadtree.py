@@ -114,9 +114,9 @@ class Solution:
         lg = len(grid)
         lgh = int(lg/2)
         qLst = [('tl', 0, lgh, 0, lgh),
-                   ('tr', lgh, lg, 0, lgh),
-                   ('bl', 0, lgh, lgh, lg),
-                   ('br', lgh, lg, lgh, lg)]
+                ('tr', lgh, lg, 0, lgh),
+                ('bl', 0, lgh, lgh, lg),
+                ('br', lgh, lg, lgh, lg)]
         for kind, fc, tc, fr, tr in qLst:
             node.__dict__[kind] = self.add_subnode(grid, fc, tc, fr, tr)
         return node
