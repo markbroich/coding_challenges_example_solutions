@@ -102,35 +102,32 @@ class Node:
 
 
 class Solution:
+    # recursion
+    def construct(self, grid):
+        if self.is_not_square(grid):
+            return -1
+        # base case
+        if self.is_leaf(grid): 
+            return Node(val=grid[0][0])
+        # length grid and length grid half
+        node = Node(val=999, leaf=0)
+        lg = len(grid)
+        lgh = int(lg/2)
+        qLst = [('tl', 0, lgh, 0, lgh),
+                   ('tr', lgh, lg, 0, lgh),
+                   ('bl', 0, lgh, lgh, lg),
+                   ('br', lgh, lg, lgh, lg)]
+        for kind, fc, tc, fr, tr in qLst:
+            node.__dict__[kind] = self.add_subnode(grid, fc, tc, fr, tr)
+        return node
+
+    # input check
     def is_not_square(self, grid):
         if 2**len(grid) % 2 != 0:
             return True
         return False
 
-    def construct(self, grid):
-        if self.is_not_square(grid):
-            return -1
-
-        def add_subnode(kind, fromC, toC, fromR, toR):
-            subgrid = [lst[fromC:toC] for lst in grid[fromR:toR]]
-            if self.is_leaf(subgrid): 
-                node.__dict__[kind] = Node(val=subgrid[0][0])
-            else:
-                node.__dict__[kind] = self.construct(subgrid)
-
-        # length grid and length grid half
-        node = Node(val=999, leaf=0)
-        lg = len(grid)
-        lgh = int(lg/2)
-        quadLst = [('tl', 0, lgh, 0, lgh),
-                   ('tr', lgh, lg, 0, lgh),
-                   ('bl', 0, lgh, lgh, lg),
-                   ('br', lgh, lg, lgh, lg)]
-        for kind, fromC, toC, fromR, toR in quadLst:
-            add_subnode(kind, fromC, toC, fromR, toR)
-        return node
-
-    # leaf check
+    # leaf check 'is pure' (base case)
     def is_leaf(self, grid):
         num = grid[0][0]
         for c in range(0, len(grid)):
@@ -139,7 +136,13 @@ class Solution:
                     return False
         return True
 
+    # add subnode
+    def add_subnode(self, grid, fc, tc, fr, tr):
+        subgrid = [lst[fc:tc] for lst in grid[fr:tr]]
+        return self.construct(subgrid)
+
     # queue in a loop
+    # Ot(N)
     def layer_order_traverse(self, root):
         returnLst = []
         if root.leaf == 0:
@@ -150,14 +153,10 @@ class Solution:
             nodLstNext = []
             for n, parent, kind in nodLst:
                 returnLst.append([n.leaf, n.val, parent, kind])
-                if n.tl:
-                    nodLstNext.append((n.tl, 'tl', kind))
-                if n.tr:
-                    nodLstNext.append((n.tr, 'tr', kind))
-                if n.bl:
-                    nodLstNext.append((n.bl, 'bl', kind))
-                if n.br:
-                    nodLstNext.append((n.br, 'br', kind))
+                qLst = ['tl', 'tr', 'bl', 'br']
+                nodLstNextPlus = [(n.__dict__[q], q, kind) 
+                                  for q in qLst if n.__dict__[q]]
+                nodLstNext = nodLstNext + nodLstNextPlus
             if len(nodLstNext) == 0:
                 break
             returnLst.append(['next level'])
