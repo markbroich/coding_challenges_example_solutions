@@ -68,6 +68,25 @@ Output: [[0,1],[1,1],[1,0],[1,0],[1,1]]
 Constraints:
 n == grid.length == grid[i].length
 n == 2^x where 0 <= x <= 6
+
+Background as per 'geek for geeks':
+Quadtrees are used in image compression, 
+where each node contains the average colour 
+of each of its children. The deeper you 
+traverse in the tree, the more the detail of the image.
+Quadtrees are also used in searching for nodes in a 
+two-dimensional area. For instance, 
+if you wanted to find the closest point to 
+given coordinates, you can do it using quadtrees.
+If more than 2 dimensions: use KD tree
+Quadtrees typically have insert and search functions (only insert is coded here).
+Search is used to locate a node in the given quad. 
+It can also be modified to return the closest node 
+to the given point. This function is implemented by 
+taking the given point, comparing with the boundaries 
+of the child quads and recursing.
+Both functions are O(Log N) where N is size of distance.
+
 '''
 
 
@@ -94,7 +113,7 @@ class Solution:
 
         def add_subnode(kind, fromC, toC, fromR, toR):
             subgrid = [lst[fromC:toC] for lst in grid[fromR:toR]]
-            if self.is_pure(subgrid): 
+            if self.is_leaf(subgrid): 
                 node.__dict__[kind] = Node(val=subgrid[0][0])
             else:
                 node.__dict__[kind] = self.construct(subgrid)
@@ -111,8 +130,8 @@ class Solution:
             add_subnode(kind, fromC, toC, fromR, toR)
         return node
 
-    # purity check
-    def is_pure(self, grid):
+    # leaf check
+    def is_leaf(self, grid):
         num = grid[0][0]
         for c in range(0, len(grid)):
             for r in range(0, len(grid[0])):
