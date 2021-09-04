@@ -79,11 +79,12 @@ two-dimensional area. For instance,
 if you wanted to find the closest point to 
 given coordinates, you can do it using quadtrees.
 If more than 2 dimensions: use KD tree
-Quadtrees typically have insert and search functions (only insert is coded here).
+Quadtrees typically have contstruct, insert and search functions 
+(only contstruct is coded here).
 Search is used to locate a node in the given quad. 
 It can also be modified to return the closest node 
 to the given point. This function is implemented by 
-taking the given point, comparing with the boundaries 
+taking the given point, comparing with the boundaries
 of the child quads and recursing.
 Both functions are O(Log N) where N is size of distance.
 
