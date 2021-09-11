@@ -87,3 +87,68 @@ grid = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","
 exp = -1
 click = [3,0]
 print(solve(grid, reveiledSet=set(), click=click) == exp)
+print()
+
+
+# using while loop rather than recursion and 
+# bfs vs dfs switch
+def solve(grid, reveiledSet=set(), click=(0,0), bfs=True):
+    if grid[click[0]][click[1]] == 'B':
+        print('bad input (click)')
+        return -1
+    elif grid[click[0]][click[1]] == 'M':
+        print('hit mine : BOOM!')
+        grid[click[0]][click[1]] = 'X'
+        return grid
+    #
+    stackOrQueue = [(click[0], click[1])]
+    adjLst = [(-1, -1), (-1, 0), (-1, 1), 
+              (0, -1),           (0, 1), 
+              (1, -1),  (1, 0),  (1, 1)]
+    while stackOrQueue:
+        if bfs:
+            clr, clc = stackOrQueue.pop(0)
+        else:
+            # dfs
+            clr, clc = stackOrQueue.pop()
+        for r, c in adjLst:
+            r = clr + r
+            c = clc + c
+            # returns same grid if all neigbors are reveiledSet
+            if not (r, c) in reveiledSet:
+                # unreveiled and not mine
+                if is_valid(grid, r ,c) and grid[r][c] == 'E':
+                    mineCnt = cnt_mines(grid, r, c, adjLst, reveiledSet)
+                    if mineCnt > 0:
+                        grid[r][c] = str(mineCnt)        
+                    else: 
+                        # unrevealed empty square now revealed
+                        grid[r][c] = 'B'
+                        reveiledSet.add((r, c))
+                        stackOrQueue.append((r, c))
+    return grid
+
+
+
+
+## run code
+
+# example 1
+grid = [["E","E","E","E","E"],["E","E","M","E","E"],["E","E","E","E","E"],["E","E","E","E","E"]]
+click = [3,0]
+exp = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+print(solve(grid, reveiledSet=set(), click=click) == exp)
+print()
+
+# example 2
+grid = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+exp = [["B","1","E","1","B"],["B","1","X","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+click = [1,2]
+print(solve(grid, reveiledSet=set(), click=click) == exp)
+print()
+
+# example 3
+grid = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+exp = -1
+click = [3,0]
+print(solve(grid, reveiledSet=set(), click=click) == exp)
