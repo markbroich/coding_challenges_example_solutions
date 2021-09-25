@@ -45,7 +45,13 @@ fromi != toi
 
 
 def solve(tickets):
-    def rec(route, tickets, ori):
+    # Worth case is to backtrack all combiantions
+    # So number of flights^maxDestiantions
+    # So, O(f^maxD) where f is number of flights and maxD is max 
+    # destiantions from an airport
+    # the likely runtime is much less due to a solution beeing found w/o having to 
+    # eval all combinations of flights from all airports
+    def dfs(route, tickets, ori):
         route = route + [ori]
         if len(tickets) == 0:
             # if I am out of tickets, 
@@ -53,10 +59,12 @@ def solve(tickets):
             return True, route
         destLst = [t for t in tickets if t[0] == ori]
         # sort dest so to try the lexiograpically smaller once first
+        # O(v log(v)) where v is vertices
+        # Os(1)
         destLst.sort()
         for ori, dest in destLst:
             tickets.remove([ori, dest])
-            res, resRoute = rec(route, tickets, dest)
+            res, resRoute = dfs(route, tickets, dest)
             if res:
                 return True, resRoute
             # backtrack
@@ -65,7 +73,7 @@ def solve(tickets):
         # the path is invalid
         return False, route
 
-    return rec([], tickets, ori="JFK")[1]
+    return dfs([], tickets, ori="JFK")[1]
 
 # ex1
 tickets = [["JFK", "SFO"],
@@ -81,8 +89,86 @@ tickets = [["MUC", "LHR"],["JFK", "MUC"],["SFO", "SJC"],["LHR", "SFO"]]
 exp = ["JFK", "MUC", "LHR", "SFO", "SJC"]
 print(solve(tickets) == exp)
 
-# there is a faster solution where the route is built from back to front
+
+# There is a faster solution using the
+# eulerian path where the route is built from back to front
 # by adding an airport to the end of the route, 
-# once we have taken all outgoing flights. At that point we go back one airport 
+# once we have taken all outgoing flights. At that point we go back one airport
 # and travel until we are at and aritport where we have taken all outgoing flights
-# we add that airport to the fornt of the route and repeat. 
+# we add that airport to the fornt of the route and repeat.
+
+# Ot(e log(e/v))
+# Os(e + v)
+def solve(tickets, o='JFK'):
+    # Ot(e+v) where n is ticket count
+    # Os(e+v)
+    myGraph = pop_dict(tickets)
+    # Ot(e log(e/v))
+    myGraph = sort_dict_valueLst(myGraph)
+
+    # Eulerian Path so visits each edge once:
+    # so Ot(e) 
+    # stack memory Os(e)
+    def dfs(myDict, o):
+        while myDict[o]:
+            d = myDict[o][0]
+            del myDict[o][0]
+            if d in myDict:
+                dfs(myDict, d)
+            else:
+                route.append(d)
+        route.append(o)
+
+    route = []
+    dfs(myGraph, o)
+
+    route = revLst(route)
+    # to reverse also use:
+    # route.reverse()
+    # route = route[::-1]
+    return route
+
+
+# Ot(e+v) where n is ticket count
+# Os(e+v)
+def pop_dict(tickets):
+    myDict = {}
+    for o, d in tickets:
+        if o in myDict:
+            myDict[o].append(d)
+        else:
+            myDict[o] = [d]
+    return myDict
+
+
+# Ot(e log(e/v)). where e are the edges and v are the vertices
+# Normal would be n log(n) 
+# but we can assume equal distribution of edges per vertice so e/v per 
+# edge outcoing and e/v returning so e/v*2. Simpligying to e log(e/v). 
+# Os()
+def sort_dict_valueLst(myDict):
+    for k in myDict:
+        myDict[k] = sorted(myDict[k])
+    return myDict
+
+
+# Ot(n) where n is length of lst
+# Os(1)
+def revLst(lst):
+    for i in range(0, int(len(lst)/2)):
+        lst[len(lst)-1-i], lst[i] = lst[i], lst[len(lst)-1-i] 
+    return lst
+
+
+# Run code
+tickets = [["JFK", "SFO"],
+           ["JFK", "ATL"],
+           ["SFO", "ATL"],
+           ["ATL", "JFK"],
+           ["ATL", "SFO"]]
+exp = ["JFK", "ATL", "JFK", "SFO", "ATL", "SFO"]
+print(solve(tickets) == exp)
+
+tickets = [["MUC", "LHR"],["JFK", "MUC"],["SFO", "SJC"],["LHR", "SFO"]]
+exp = ["JFK", "MUC", "LHR", "SFO", "SJC"]
+print(solve(tickets) == exp)
