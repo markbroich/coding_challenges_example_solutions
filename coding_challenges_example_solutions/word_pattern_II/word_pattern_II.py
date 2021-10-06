@@ -41,11 +41,13 @@ pattern and s consist of only lower-case English letters.
 '''
 
 
-
-
 def solve(p, s):
     if not s or not p:
         return False
+    if len(s) == 1 and len(p) == 1:
+        return True
+    if len(p) == 1:
+        return True
 
     def dfs(p, s, mapping):
         if not s and not p:
