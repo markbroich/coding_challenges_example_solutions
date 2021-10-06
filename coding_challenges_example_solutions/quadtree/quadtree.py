@@ -213,3 +213,112 @@ print(S.layer_order_traverse(rootNode) == exp)
 
 
 
+############ 
+# done a different way: 
+
+class Node:
+    '''
+    Definition of a QuadTree node
+    '''
+    def __init__(self, val, isLeaf, 
+                 topLeft=None, topRight=None, 
+                 bottomLeft=None, bottomRight=None):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+
+
+class Solution:
+    '''
+    Class to construct and return the quadtree
+    '''
+    def construct(self, grid: 'list[list[int]]') -> 'Node':
+        if len(grid) == 1 or self.is_pure(grid):
+            return Node(grid[0][0], 1)
+        mid = int(len(grid) / 2)
+        tl = self.construct([r[:mid] for r in grid[:mid]])
+        tr = self.construct([r[mid:] for r in grid[:mid]])
+        bl = self.construct([r[:mid] for r in grid[mid:]])
+        br = self.construct([r[mid:] for r in grid[mid:]])
+        return Node(1, 0, tl, tr, bl, br)
+
+    def is_pure(self, grid):
+        for r in range(0, len(grid)):
+            for c in range(0, len(grid[0])):
+                if grid[r][c] != grid[0][0]:
+                    return False
+        return True
+
+    def layer_order_trav(self, root):
+        res = [[root.isLeaf, root.val]]
+        if root.isLeaf:
+            return res
+
+        def enque(root):
+            for n in [root.topLeft, root.topRight, 
+                      root.bottomLeft, root.bottomRight]:
+                queue.append(n)
+        queue = []
+        enque(root)
+
+        while queue:
+            root = queue.pop(0)
+            if root:
+                res.append([root.isLeaf, root.val])
+                enque(root)
+            else:
+                res.append('null')
+
+        # drop tailing 'null' entires
+        while res[-1] == 'null':
+            res.pop()
+        return res
+
+
+S1 = Solution()
+print()
+
+# ex 1
+grid = [[0]]
+exp = [[1, 0]]
+root = S1.construct(grid)
+print(S1.layer_order_trav(root) == exp)
+
+# ex 2
+grid = [[0,1],[1,0]]
+# first lst is the root. 
+exp = [[0,1],[1,0],[1,1],[1,1],[1,0]]
+root = S1.construct(grid)
+print(S1.layer_order_trav(root) == exp)
+
+# ex 3
+grid = [[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0],[1,1,1,1,0,0,0,0]]
+exp = [[0,1],[1,1],[0,1],[1,1],[1,0],'null','null','null','null',[1,0],[1,0],[1,1],[1,1]]
+# # # Explanation: All values in the grid are not the same. We divide the grid into four sub-grids.
+# # # The topLeft, bottomLeft and bottomRight each has the same value.
+# # # The topRight have different values so we divide it into 4 sub-grids where each has the same value.
+# # # Explanation is shown here: https://assets.leetcode.com/uploads/2020/02/12/e2tree.png
+root = S1.construct(grid)
+print(S1.layer_order_trav(root) == exp)
+
+# ex 4
+grid = [[1,1],[1,1]]
+exp = [[1,1]]
+root = S1.construct(grid)
+print(S1.layer_order_trav(root) == exp)
+
+# ex 5
+grid = [[0]]
+exp = [[1,0]]
+root = S1.construct(grid)
+print(S1.layer_order_trav(root) == exp)
+
+# ex 6
+grid = [[1,1,0,0],[1,1,0,0],[0,0,1,1],[0,0,1,1]]
+exp = [[0,1],[1,1],[1,0],[1,0],[1,1]]
+root = S1.construct(grid)
+print(S1.layer_order_trav(root) == exp)
+
