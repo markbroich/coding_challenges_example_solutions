@@ -152,3 +152,69 @@ grid = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","
 exp = -1
 click = [3,0]
 print(solve(grid, reveiledSet=set(), click=click) == exp)
+
+
+
+
+# Approach:
+#   DFS:
+#       add to seen set
+#       check if possible neighbor is a mine
+#       and cont mines
+#       if mines nearby, add number to board and return
+#       else: mark as blank and recure all possible neighbors
+
+
+class Solution:
+    def updateBoard(self, board, click):
+        if board[click[0]][click[1]] == 'M':
+            board[click[0]][click[1]] = 'X'
+            return board
+        #
+        dirLst = [(-1,-1),(-1,0),(-1,1),
+                  (0,-1),         (0,1),
+                  (1,-1), (1,0),  (1,1)]
+
+        self.rCnt = len(board)
+        self.cCnt = len(board[0])
+        seen = set()
+        def dfs(r, c):
+            seen.add((r, c))
+            mCnt = 0
+            for n in dirLst:
+                r_, c_ = r + n[0], c + n[1]
+                if not (r_, c_) in seen and self.__inside(r_, c_):
+                    if board[r_][c_] == 'M':
+                        mCnt += 1
+            if mCnt > 0:
+                board[r][c] = str(mCnt)
+                return
+            board[r][c] = 'B'
+            for n in dirLst:
+                r_, c_ = r + n[0], c + n[1]
+                if not (r_, c_) in seen and self.__inside(r_, c_):
+                    dfs(r_, c_)
+
+        dfs(click[0], click[1])
+        return board
+
+    def __inside(self, r_, c_):
+        if r_ < 0 or r_ >= self.rCnt or\
+           c_ < 0 or c_ >= self.cCnt:
+            return False
+        return True
+
+S = Solution()
+
+
+
+board = [["E","E","E","E","E"],["E","E","M","E","E"],["E","E","E","E","E"],["E","E","E","E","E"]]
+click = [3,0]
+exp = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+
+print(S.updateBoard(board, click) == exp)
+
+board = [["B","1","E","1","B"],["B","1","M","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+click = [1,2]
+exp = [["B","1","E","1","B"],["B","1","X","1","B"],["B","1","1","1","B"],["B","B","B","B","B"]]
+print(S.updateBoard(board, click) == exp)
