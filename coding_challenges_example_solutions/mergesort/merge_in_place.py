@@ -84,15 +84,10 @@ def mergeLists(A, B):
     return B
   if not A:
     return []
-  
+
   insertionPtr = len(A) - 1
-  pA = 0
+  pA = len(A) - len(B) - 1
   pB = len(B) - 1
-  for i in range(len(A)):
-    if A[i] is not None:
-      pA = i
-    else:
-      break
       
   while pB >= 0:
     if A[pA] < B[pB]:
@@ -102,7 +97,7 @@ def mergeLists(A, B):
       A[insertionPtr] = A[pA]
       pA -= 1
     insertionPtr -= 1
-    
+  
   return A
 
 # Ot((valid elements in A + len valid elements in B)^2)
