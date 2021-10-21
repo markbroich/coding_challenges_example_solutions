@@ -4,7 +4,7 @@ Construct Quad Tree (leetcode 427: https://leetcode.com/problems/construct-quad-
 Given a n * n matrix grid of 0's and 1's only. We want to represent the grid with a Quad-Tree.
 Return the root of the Quad-Tree representing the grid.
 
-Notice that you can assign the value of a node to True or False when leaf is False, and both are accepted 
+Notice that you can assign the value of a node to True or False when leaf is False, and both are accepted
 in the answer.
 
 A Quad-Tree is a tree data structure in which each internal node has exactly four children. 
