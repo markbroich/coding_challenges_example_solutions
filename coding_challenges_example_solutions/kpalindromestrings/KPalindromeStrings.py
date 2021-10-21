@@ -50,16 +50,25 @@ All characters in s are lower-case English letters.
 # so, the apporach is to create an occurance count dict, count the number of odd occurances
 # and compare the number of odd occurances with k
 
-
+# Apporach: 
+#   a palindrome can contain at max 1 char that occurs an odd number of times
+#   hence to split a str into k palindromes, the string must contain count char 
+#   with odd occurace <= k 
+#       So, get the number of odd occurances and compare with k:
+#           map to occurance cnt dict, loop over dict and count v % 2 != 0
+#           compare count w k
+#   Also:
+#       if k == char: True
+#       if k > char: False
 
 # Ot(s) Os(s)
 def k_palindron_string(s, k):
-    if len(s) == k: 
-        return  True
-    if len(s) < k: 
-        return False 
+    if len(s) == k:
+        return True
+    if len(s) < k:
+        return False
     occDict = pop_dict(s)
-    oddCnt = count_odd(occDict) 
+    oddCnt = count_odd(occDict)
     res = oddCnt <= k
     return res
 
@@ -68,7 +77,7 @@ def pop_dict(s):
     myDict = {}
     for i in s:
         if i in myDict:
-            myDict[i] +=1
+            myDict[i] += 1
         else:
             myDict[i] = 1
     return myDict
@@ -77,7 +86,7 @@ def pop_dict(s):
 def count_odd(myDict):
     oddCnt = 0
     for v in myDict.values():
-        oddCnt += v%2 > 0
+        oddCnt += v % 2 > 0
     return oddCnt
 
 
@@ -111,4 +120,5 @@ s = "messi"
 k = 3
 exp = True
 print(k_palindron_string(s, k) == exp)
+
 

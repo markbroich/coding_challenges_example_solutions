@@ -184,10 +184,138 @@ s = 'aaacbb'
 exp = -1
 print('9', generatePalindromes(s) == exp)
 
+s = 'aaaaaaaacbbbb'
+exp = ['bbaaaacaaaabb', 'babaaacaaabab', 'abbaaacaaabba', 'baabaacaabaab', 
+       'ababaacaababa', 'aabbaacaabbaa', 'baaabacabaaab', 'abaabacabaaba', 
+       'aababacababaa', 'aaabbacabbaaa', 'baaaabcbaaaab', 'abaaabcbaaaba', 
+       'aabaabcbaabaa', 'aaababcbabaaa', 'aaaabbcbbaaaa']
+print('10', sorted(generatePalindromes(s)) == sorted(exp))
+
 # much faster code...
 s = 'aaaaaaaacbbbb'
 exp = ['bbaaaacaaaabb', 'babaaacaaabab', 'abbaaacaaabba', 'baabaacaabaab', 
        'ababaacaababa', 'aabbaacaabbaa', 'baaabacabaaab', 'abaabacabaaba', 
        'aababacababaa', 'aaabbacabbaaa', 'baaaabcbaaaab', 'abaaabcbaaaba', 
        'aabaabcbaabaa', 'aaababcbabaaa', 'aaaabbcbbaaaa']
-print('10', generatePalindromes_short(s) == exp)
+print('10a', generatePalindromes_short(s) == exp)
+
+
+
+
+
+class Solution:
+    def generatePalindromes(self, s):
+        if not s:
+            return -1
+        myDict = self.pop_cnt_dict(s)
+        inLst, oddItem, oddCnt = self.get_inLst_oddItem(myDict)
+        if oddCnt > 1:
+            return -1
+        halfpermlst = self.permutations(inLst)
+        retLst = self.add_half(halfpermlst, oddItem)
+        for i in range(0, len(retLst)):
+            retLst[i] = ''.join(retLst[i])
+        return retLst
+
+    def pop_cnt_dict(self, s):
+        myDict = {}
+        for i in s:
+            if i in myDict:
+                myDict[i] += 1
+            else:
+                myDict[i] = 1
+        return myDict
+
+    def get_inLst_oddItem(self, myDict):
+        inLst = []
+        oddItem = ''
+        oddCnt = 0
+        for key in myDict.keys():
+            if myDict[key] % 2 == 1:
+                oddCnt +=1
+                oddItem = key
+            for i in range(int(myDict[key] / 2)):
+                inLst.append(key)
+        return inLst, oddItem, oddCnt
+
+    def permutations(self, s):
+        # a recursive function that tracks duplicates.
+        res = []
+        def perm(pre=[], left=[]):
+            if len(left) == 0:
+                return pre
+            myset = set()
+            for i in range(0, len(left)):
+                p = left[i]
+                if p not in myset:
+                    myset.add(p)
+                    l = left[:i] + left[i+1:]
+                    temp = perm(pre+[p], l)
+                    if temp:
+                        res.append(temp)
+
+        perm([], s)
+        return res
+
+    def add_half(self, halfpermlst, oddItem):
+        res = []
+        for i in range(0, len(halfpermlst)):
+            if not oddItem == '':
+                res.append(halfpermlst[i] + [oddItem] + halfpermlst[i][::-1])
+            else:
+                res.append(halfpermlst[i] + halfpermlst[i][::-1])
+        return res
+
+
+
+# run and test code
+S1 = Solution()
+s = 'aabb'
+exp = ['abba', 'baab']
+print('1', S1.generatePalindromes(s) == exp)
+
+s = 'abc'
+exp = -1
+print('2', S1.generatePalindromes(s) == exp)
+
+s = 'aacbb'
+exp = ['abcba', 'bacab']
+print('3', S1.generatePalindromes(s) == exp)
+
+s = 'aaaacbb'
+exp = ['aabcbaa', 'abacaba', 'baacaab']
+print('4', S1.generatePalindromes(s) == exp)
+
+s = 'aaaaaaaacbb'
+exp = ['aaaabcbaaaa', 'aaabacabaaa', 'aabaacaabaa', 'abaaacaaaba', 
+       'baaaacaaaab']
+print('5', S1.generatePalindromes(s) == exp)
+
+s = 'aaaaaaaacbbbb'
+exp = ['aaaabbcbbaaaa', 'aaababcbabaaa', 'aaabbacabbaaa', 'aabaabcbaabaa', 
+       'aababacababaa', 'aabbaacaabbaa', 'abaaabcbaaaba', 'abaabacabaaba', 
+       'ababaacaababa', 'abbaaacaaabba', 'baaaabcbaaaab', 'baaabacabaaab', 
+       'baabaacaabaab', 'babaaacaaabab', 'bbaaaacaaaabb']
+print('6', S1.generatePalindromes(s) == exp)
+
+s = 'aabbccdd'
+exp = ['abcddcba', 'abdccdba', 'acbddbca', 'acdbbdca', 'adbccbda', 'adcbbcda', 
+       'bacddcab', 'badccdab', 'bcaddacb', 'bcdaadcb', 'bdaccadb', 'bdcaacdb', 
+       'cabddbac', 'cadbbdac', 'cbaddabc', 'cbdaadbc', 'cdabbadc', 'cdbaabdc', 
+       'dabccbad', 'dacbbcad', 'dbaccabd', 'dbcaacbd', 'dcabbacd', 'dcbaabcd']
+print('7', S1.generatePalindromes(s) == exp)
+
+s = 'aaabb'
+exp = ['ababa', 'baaab']
+print('8', S1.generatePalindromes(s) == exp)
+
+s = 'aaacbb'
+exp = -1
+print('9', S1.generatePalindromes(s) == exp)
+
+s = 'aaaaaaaacbbbb'
+exp = ['aaaabbcbbaaaa', 'aaababcbabaaa', 'aaabbacabbaaa', 'aabaabcbaabaa', 
+       'aababacababaa', 'aabbaacaabbaa', 'abaaabcbaaaba', 'abaabacabaaba',
+       'ababaacaababa', 'abbaaacaaabba', 'baaaabcbaaaab', 'baaabacabaaab',
+       'baabaacaabaab', 'babaaacaaabab', 'bbaaaacaaaabb']
+print('10', S1.generatePalindromes(s) == exp)
