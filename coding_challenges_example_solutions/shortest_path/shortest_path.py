@@ -293,6 +293,232 @@ shortestPathSteps = list_shortest_path_steps(previous, start, end)
 print('-as BFS-')
 print('The shortest from ', start, ' to ', end, ' is: ', dist[end], ' long.')
 print('The path is: ', shortestPathSteps)
+print()
 # Note: the BFS length of the shortest path differs from dijkstras shortest path
 # given that we report a step count ignoring path cost. 
 # Futher, the path found in our case is not unique. 
+
+
+
+
+
+'''
+Shortest Cell Path
+
+In a given grid of 0s and 1s, we have some starting row and column
+sr, sc and a target row and column tr, tc. Return the length of the
+shortest path from sr, sc to tr, tc that walks along 1 values only.
+
+Each location in the path, including the start and the end, must
+be a 1. Each subsequent location in the path must be
+4-directionally adjacent to the previous location.
+
+It is guaranteed that grid[sr][sc] = grid[tr][tc] = 1, and the
+starting and target positions are different.
+
+If the task is impossible, return -1.
+
+Examples:
+
+input:
+grid = [[1, 1, 1, 1], [0, 0, 0, 1], [1, 1, 1, 1]]
+sr = 0, sc = 0, tr = 2, tc = 0
+output: 8
+(The lines below represent this grid:)
+1111
+0001
+1111
+
+grid = [[1, 1, 1, 1], [0, 0, 0, 1], [1, 0, 1, 1]]
+sr = 0, sc = 0, tr = 2, tc = 0
+output: -1
+(The lines below represent this grid:)
+1111
+0001
+1011
+Constraints:
+
+[time limit] 5000ms
+[input] array.array.integer grid
+1 ≤ arr.length = arr[i].length ≤ 10
+[input] integer sr
+[input] integer sc
+[input] integer tr
+[input] integer tc
+All sr, sc, tr, tc are valid locations in the grid, grid[sr][sc] = grid[tr][tc] = 1, and (sr, sc) != (tr, tc).
+[output] integer
+'''
+
+
+def shortestCellPath(grid, sr, sc, tr, tc):
+  seenDict = {(sr, sc):''}
+  queue = [((sr, sc), 0)]
+  while queue:
+    a, depth = queue.pop(0)
+    for adj in [(-1,0), (1, 0), (0, -1), (0, 1)]:
+      r = adj[0] + a[0]
+      c = adj[1] + a[1]
+      if r > -1 and r < len(grid) and  c > -1 and c < len(grid[0]) and (r, c) not in seenDict:
+        if r == tr and c == tc:
+          return depth + 1
+        if grid[r][c] == 1:
+          seenDict[(r,c)] = ''
+          queue.append(((r, c), depth + 1))
+  return -1
+
+
+grid = [[1,1,1,1],[0,0,0,1],[1,1,1,1]]
+sr = 0
+sc = 0
+tr = 2
+tc = 0
+
+print(shortestCellPath(grid, sr, sc, tr, tc))
+
+
+"""
+  - Dijkstra
+  - run a dijkstra 
+  - visited = {(r, c):}
+    - maintain a priority q (key will be the distance)
+    - insert (sr, sc, 0)
+    - at each step 
+      - pop the element (i, j, d)
+      - if i == tr and j == tc:
+          return d
+      - increment the dist insert 1' unvisited neighbors in the q (nr, nc, d+1)
+    - return -1
+    
+Time complexity: O(nm)
+Space complexity: O(nm)
+"""
+
+
+'''
+Dijkstra is use for weighted graphs with none negatvie edges. 
+Ot(ELogV)) as there will be at most O(E) vertices in priority queue 
+determining the min dist vertice take log(V) and we do that for each of E edges, ???
+hence
+Ot(E log(V))
+Os(V + E) given that V > E: Os(V)
+'''
+
+import heapq as pq
+
+
+def shortestCellPath(grid: list,
+                     sr: int, sc: int,
+                     tr: int, tc: int
+                     ) -> int:
+    m, n = len(grid), len(grid[0])
+    q = []
+    pq.heappush(q, (0, sr, sc))
+    visited = {}
+
+    while q:
+        d, i, j = pq.heappop(q)
+        visited[(i, j)] = d
+        if i == tr and j == tc:
+            return d
+        # Top and bottom node
+        for ni in [max(0, i - 1), min(m-1, i+1)]:
+            if ni == i:
+                continue
+            if grid[ni][j] == 1 and (ni, j) not in visited:
+                pq.heappush(q, (d+1, ni, j))
+        # Left and right node
+        for nj in [max(0, j - 1), min(n-1, j+1)]:
+            if nj == j:
+                continue
+            if grid[i][nj] == 1 and (i, nj) not in visited:
+                pq.heappush(q, (d+1, i, nj))
+    return -1
+     
+
+grid = [[1,1,1,1],[1,0,0,1],[1,1,1,1]]
+sr = 0
+sc = 0
+tr = 2
+tc = 0
+print(shortestCellPath(grid, sr, sc, tr, tc))
+
+
+
+
+
+# Test Case #1
+print(shortestCellPath([[1,1,1,1],[0,0,0,1],[1,1,1,1]], 0, 0, 2, 0) == 8)
+# Test Case #2
+print(shortestCellPath([[1,1,1,1],[0,0,0,1],[1,0,1,1]], 0, 0, 2, 0) == -1)
+# Test Case #3
+print(shortestCellPath([[0,1,0],[1,0,0],[1,0,1]], 2, 0, 1, 0) == 1)
+# Test Case #4
+print(shortestCellPath([[1,1,1],[0,0,0],[0,0,0]], 0, 1, 0, 0) == 1)
+# Test Case #5
+print(shortestCellPath([[1,0,1,1],[1,0,1,1],[0,0,1,0],[0,0,0,0]], 1, 3, 0, 0) == -1)
+# Test Case #6
+print(shortestCellPath([[1,0,1,1,1],[1,0,0,0,0],[0,0,0,0,0],[1,1,0,0,1],[1,0,0,1,1]], 0, 3, 3, 1) == -1)
+# Test Case #7
+print(shortestCellPath([[0,1,0,1,0],[1,0,1,1,0],[0,0,0,0,0],[1,1,1,1,0],[0,0,1,1,1]], 3, 0, 0, 3) == -1)
+# Test Case #8
+print(shortestCellPath([[1,1,1,1,0,0],[1,0,0,0,0,0],[0,1,1,0,1,1],[1,0,0,0,1,1],[1,0,1,0,1,0],[0,0,0,1,1,0]], 5, 4, 2, 1) == -1)
+# Test Case #9
+print(shortestCellPath([[1,1,0,0,1,0],[1,0,0,1,1,1],[0,0,0,0,1,1],[1,0,0,0,0,0],[0,1,1,0,0,1],[0,0,1,1,0,0]], 3, 0, 1, 3) == -1)
+print()
+
+#### on a weighted graph
+import heapq as pq
+
+
+def shortestPath(G: dict, s: str, t: str) -> int:
+    q = []
+    pq.heappush(q, (0, s))
+    visited = {}
+
+    while q:
+        d, n = pq.heappop(q)
+        print(d, n)
+        visited[n] = d
+        if n == t:
+            return d
+        for m in G[n]:
+            if m not in visited:
+                pq.heappush(q, (d + G[n][m], m))
+    return -1
+
+# while the dijkstras shortest path algo will find the shortest path
+# using its priority que,
+# it may greedily explore a longer path first e.g.
+# 
+# When going from a to d in the examples below it
+# will first expore the b, c path before going:
+# directly to d:
+# a--2--b--2--c--2--d
+#  \               /
+#    ------3------
+#
+
+# Ex 1
+G = {
+    'a':{'b':2,'d':3}, 
+    'b': {'a':2,'c':2}, 
+    'c': {'b':2,'d':2}, 
+    'd': {'c':2,'a':3}
+    }
+print(shortestPath(G, s='a', t='d') == 3)
+
+
+# to d via 3:
+# a--2--b--2--c--2--d
+#  \               /
+#    ---3--e--1---
+# 
+# Ex 2
+G = {
+    'a': {'b':2,'e':4}, 
+    'b': {'a':2,'c':2}, 
+    'c': {'b':2,'d':2}, 
+    'd': {'c':2,'e':1}, 
+    'e': {'a':4,'d':1}, 
+    }
+print(shortestPath(G, s='a', t='d') == 5)
