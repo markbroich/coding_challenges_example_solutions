@@ -62,6 +62,39 @@ testing()
 
 
 
+# iterative 
+# Ot(n^2) 
+# Os(n) since we are memoizing only the last two rows.
+def num_of_paths_to_dest_it(n):
+  if n == 1:
+    return 1
+  
+  lastRow = ['']*n
+  for i in range(1, n):
+    lastRow[i] = 1
+    
+  currentRow = ['']*n
+  
+  for j in range(1, n):
+    for i in range(j, n):
+      if i == j:
+        currentRow[i] = lastRow[i]
+      else:
+        currentRow[i] = currentRow[i-1] + lastRow[i]
+    lastRow = currentRow
+  return currentRow[n-1]
+
+n = 4
+print(num_of_paths_to_dest_it(n))
 
 
+def testing():
+    print(num_of_paths_to_dest_it(1) == 1)
+    print(num_of_paths_to_dest_it(2) == 1)
+    print(num_of_paths_to_dest_it(3) == 2)
+    print(num_of_paths_to_dest_it(4) == 5)
+    print(num_of_paths_to_dest_it(6) == 42)
+    print(num_of_paths_to_dest_it(17) == 35357670)
+
+testing()
 
