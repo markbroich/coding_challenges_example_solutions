@@ -42,25 +42,22 @@ def wordBreak(string, mySet, memoDict={}):
     # base case
     if len(string) == 0:
         return sentencesList
-        
+
     # if previously split
-    if string in memoDict: 
-        return memoDict[string]
-    
-    for word in mySet:
-        if string[:len(word)] == word:
-            if len(word) == len(string): 
-                sentencesList.append(word)
-            else:
-                sentences = wordBreak(string[len(word):], mySet, memoDict)
-                # if it can not be solved along a recursive path, 
-                # sentences is empty and hence sentencesList stays empty
-                for nextword in sentences:
-                    sentencesList.append(word + " " + nextword)
-    # save split
-    memoDict[string] = sentencesList
-    #print(memoDict)
-    return sentencesList
+    if string not in memoDict:     
+        for word in mySet:
+            if string[:len(word)] == word:
+                if len(word) == len(string): 
+                    sentencesList.append(word)
+                else:
+                    sentences = wordBreak(string[len(word):], mySet, memoDict)
+                    # if it can not be solved along a recursive path, 
+                    # sentences is empty and hence sentencesList stays empty
+                    for nextword in sentences:
+                        sentencesList.append(word + " " + nextword)
+        # save split
+        memoDict[string] = sentencesList
+    return memoDict[string]
 
 # test cases
 string1 = 'iloveyou'

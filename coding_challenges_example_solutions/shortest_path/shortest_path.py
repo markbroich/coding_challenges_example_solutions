@@ -473,18 +473,34 @@ import heapq as pq
 def shortestPath(G: dict, s: str, t: str) -> int:
     q = []
     pq.heappush(q, (0, s))
-    visited = {}
+    visitedDict = {}
+    prevDict = {}
 
     while q:
         d, n = pq.heappop(q)
         print(d, n)
-        visited[n] = d
+        visitedDict[n] = d
         if n == t:
+            get_path(prevDict, s, t)
             return d
         for m in G[n]:
-            if m not in visited:
+            if m not in visitedDict:
+                prevDict[m] = n
                 pq.heappush(q, (d + G[n][m], m))
     return -1
+
+def get_path(prevDict, s, t):
+    cur = t
+    path = []
+    while cur != s:
+        path.append(cur)
+        cur = prevDict[cur]
+    path.append(s)
+    print('shortest path from s to t is: ', path[::-1])
+
+
+
+
 
 # while the dijkstras shortest path algo will find the shortest path
 # using its priority que,
