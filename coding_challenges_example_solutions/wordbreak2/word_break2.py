@@ -93,22 +93,22 @@ results in a lot of edges...
 The recursions would be Ot(2**n): the nodes to visit.
 Populating a memo we
 would decrease the runtime to Ot(n**2), which is the time it takes to explore
-all edgesand populate the 'node' memo. (hence no need to recur on known nodes)
+all edges and populate the 'node' memo. (hence no need to recur on known nodes)
 
-In addition, at each visit to an edge, we needto iterate through the number of
+In addition, at each visit to an edge, we need to iterate through the number of
 solutions that are brought back by the edge. In the above worst case, each
-postfix oflength i would have 2**(i-1) number of solutions,i.e. each edge
-brings back 2**(i-1) numberof solution from the target postfix.
+postfix of length i would have 2**(i-1) number of solutions,i.e. each edge
+brings back 2**(i-1) number of solution from the target postfix.
 
-Therefore, in total, we needSum i to N of: 2**(i-1) hence Ot(2**N)
+Therefore, in total, we need Sum i to N of: 2**(i-1) hence Ot(2**N)
 iterations to construct the final solutions.
 E.g.
-s = 'aaa'wordDict = ["a", "aa", 'aaa'] calls 'result.append(" ".join(pre))'
+s = 'aaa' wordDict = ["a", "aa", 'aaa'] calls 'result.append(" ".join(pre))'
 on ['a', 'a', 'a'] ['a', 'aa'] ['aa', 'a'] ['aaa'] which is 8 items
 == 2**N == 2**3.
 
 Hence total Ot(2**N + 2**N) without memo and Ot(N**2 + 2**N) when using a memo.
-Os == Ot given that in the worst case our recursion stack fortraversing all
+Os == Ot given that in the worst case our recursion stack for traversing all
 tree edges (and populating the memo) is N**2 deepand we would aggregate a
 result that is 2**N long.'''
 
@@ -155,3 +155,84 @@ print(solve(s, mySet) == exp)
 s = 'aaaaaaaaaaaaaaaabaaaaaaa'
 mySet = ["a", "b", "aa", "aaa", "aaaa", "aaaaa"]
 # solve(s, mySet)
+
+
+# A slighly different apporach with a memo, 
+# and using indices so to not pass substrings into the callstack.
+
+
+def wordbreak(s):
+    # returns true and false
+    if not s:
+        return True
+    for i in range(0, len(s) + 1):
+        if s[:i] in wordDict:
+            return wordbreak(s[i:])
+    return False
+
+
+def wordbreak2(s):
+    res = []
+    if s in wordDict:
+        return [s]
+    for i in range(0, len(s) + 1):
+        if s[:i] in wordDict:
+            for w in wordbreak2(s[i:]):
+                res.append(s[:i] + " " + w)
+    return res
+
+
+def wordbreak2_memo(s):
+    memo = {}
+
+    def helper(s):
+        if s not in memo:
+            res = []
+            if s in wordDict:
+                return [s]
+            for i in range(0, len(s) + 1):
+                if s[:i] in wordDict:
+                    for w in helper(s[i:]):
+                        res.append(s[:i] + " " + w)
+            memo[s] = res
+        return memo[s]
+
+    return helper(s)
+
+
+# the fastest given memo use and no passing of srings so no 
+# extra ram and no additional O(len(substring)) for substring creation
+def wordbreak2_index(string):
+    memo = {}
+
+    def helper(st):
+        if st not in memo:
+            res = []
+            if string[st:] in wordDict:
+                return [string[st:]]
+            for en in range(st, len(string) + 1):
+                if string[st:en] in wordDict:
+                    for w in helper(en):
+                        res.append(string[st:en] + " " + w)
+            memo[st] = res
+        return memo[st]
+
+    return helper(0)
+
+
+s = "catsanddog"
+wordDict = ["cat", "cats", "and", "sand", "dog"]
+exp = ["cats and dog", "cat sand dog"]
+
+print(wordbreak(s))
+print(wordbreak2(s))
+print(wordbreak2_memo(s))
+print(wordbreak2_index(s))
+print()
+
+s = "catsanddogs"
+wordDict = ["cat", "cats", "and", "sand", "dog"]
+exp = ["cats and dog", "cat sand dog"]
+
+print(wordbreak(s))
+print(wordbreak2(s))

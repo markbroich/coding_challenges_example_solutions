@@ -1,7 +1,10 @@
 """
 Trending Intervals
 Problem
-Imagine you want to build an application that can visually show popularity trends. For a given movie, we are able to get access to a timeperiod’s worth of page-view traffic. But the data is sporadic in practice, so we want to be able to smooth it out when we’re visualizing it using configurable overlapping intervals
+Imagine you want to build an application that can visually show popularity trends. 
+For a given movie, we are able to get access to a timeperiod’s worth of page-view traffic. 
+But the data is sporadic in practice, so we want to be able to smooth it out when 
+we’re visualizing it using configurable overlapping intervals
 Find Sum
 What this looks like in practice is...
 ([1,3,2,4,6,5], 3) => [6,9,12,15]

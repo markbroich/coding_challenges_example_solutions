@@ -3,7 +3,7 @@
 # top left (maked zero) and need to find the shortest path
 # # aka min number of steps to the exit.
 # a passage, wall and the exit are maked with
-# 1, 2 and 9, respectivley.
+# 1, 0 and 2, respectivley.
 
 
 def min_path_out_of_maze(grid):
@@ -26,31 +26,31 @@ def min_path_out_of_maze(grid):
 
 
 def testing():
-    grid = [[0, 1, 0, 1],
+    grid = [[1, 1, 0, 1],
             [0, 1, 1, 1],
             [1, 1, 0, 0],
             [2, 0, 0, 0]]
     print(min_path_out_of_maze(grid) == 5)
 
-    grid = [[0, 1, 1, 1],
+    grid = [[1, 1, 1, 1],
             [0, 1, 1, 2],
             [1, 1, 0, 1],
             [1, 0, 0, 0]]
     print(min_path_out_of_maze(grid) == 4)
 
-    grid = [[0, 0, 0, 1],
+    grid = [[1, 0, 0, 1],
             [1, 1, 1, 1],
             [1, 1, 0, 0],
             [1, 1, 1, 2]]
     print(min_path_out_of_maze(grid) == 6)
 
-    grid = [[0, 1, 0, 1],
+    grid = [[1, 1, 0, 1],
             [1, 1, 1, 1],
             [1, 1, 2, 0],
             [1, 0, 0, 0]]
     print(min_path_out_of_maze(grid) == 4)
 
-    grid = [[0, 1, 0, 1],
+    grid = [[1, 1, 0, 1],
             [0, 1, 1, 1],
             [0, 1, 0, 0],
             [2, 0, 0, 0]]
