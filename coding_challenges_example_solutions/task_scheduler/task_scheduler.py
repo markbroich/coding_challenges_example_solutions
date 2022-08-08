@@ -266,4 +266,3 @@ tasks = ['A', 'A', 'A', 'A', 'B', 'B', 'B', 'B', 'C', 'C', 'D', 'E']
 n = 3
 exp = 14
 print(S1.leastInterval(tasks, n) == exp)
-
