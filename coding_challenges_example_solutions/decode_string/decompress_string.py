@@ -55,7 +55,10 @@ def decode(input: str) -> str:
             substring = reverse_string(substring)
             # mulitply substring with last factor from num_stack
             # and add to char_stack
-            factor = num_stack.pop()
+            if num_stack:
+                factor = num_stack.pop()
+            else:
+                factor = 1
             char_stack = char_stack + list(factor * substring)
             idx += 1
     while len(char_stack) > 0:
@@ -79,7 +82,7 @@ def get_substring_from_char_stack(char_stack: str) -> str:
 # Ot(n) Os(n) where n is length of input
 def reverse_string(input: str) -> str:
     result = ''
-    for i in range(len(input) -1, -1, -1):
+    for i in range(len(input) - 1, -1, -1):
         result += input[i]
     return result
 
@@ -95,6 +98,20 @@ def tests():
 
     input = '2[3[a]b]'
     exp = 'aaabaaab'
+    print(decode(input) == exp)
+
+    input = 'a[]b'
+    exp = 'ab'
+    print(decode(input) == exp)
+
+    input = '0[abc]'
+    exp = ''
+    print(decode(input) == exp)
+
+    # this case requires a lot of data to be copied around for the
+    # above code version.
+    input = '1[1[1[1[1[1[1[1[1[1[1[1[1[1[1[1[1[1[1[1[xx]]]]]]]]]]]]]]]]]]]]'
+    exp = 'xx'
     print(decode(input) == exp)
 
 
