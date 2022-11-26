@@ -82,63 +82,92 @@ def get_left_right_start(input: list) -> Tuple:
     return left, right
 
 
-
-input = [1, 3, 2, 4, 1, 3, 1, 4, 5, 2, 2, 1, 4, 2, 2]
-exp = 15
-print(get_lake_volume(input) == exp)
-
-
-# single ridge, or flat
-input = [1, 2, 1]
-exp = 0
-print(get_lake_volume(input) == exp)
-
-input = [1, 2, 2, 1]
-exp = 0
-print(get_lake_volume(input) == exp)
-
-input = [2, 2, 2, 2, 2]
-exp = 0
-print(get_lake_volume(input) == exp)
-
-input = [2, 3, 2, 2, 2]
-exp = 0
-print(get_lake_volume(input) == exp)
-
-input = [5]
-exp = 0
-print(get_lake_volume(input) == exp)
-
-input = [5, 6]
-exp = 0
-print(get_lake_volume(input) == exp)
+# easy to read solution as per:
+# https://techdevguide.withgoogle.com/resources/former-interview-question-volume-of-lakes/#!
+# Ot(n), Os(1)
+def trap(height):
+    left_index, right_index = 0, len(height) - 1
+    left_max, right_max = 0, 0
+    output = 0
+    while left_index < right_index:
+        if height[left_index] <= height[right_index]:
+            left_max = max(left_max, height[left_index])
+            output += max(0, left_max - height[left_index])
+            left_index += 1
+        else:
+            right_max = max(right_max, height[right_index])
+            output += max(0, right_max - height[right_index])
+            right_index -= 1
+    return output
 
 
-# on valley with bounds at the end
+def tests():
+    input = [1, 3, 2, 4, 1, 3, 1, 4, 5, 2, 2, 1, 4, 2, 2]
+    exp = 15
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
-input = [2, 1, 2]
-exp = 1
-print(get_lake_volume(input) == exp)
+    # single ridge, or flat
+    input = [1, 2, 1]
+    exp = 0
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
-input = [1, 0, 1]
-exp = 1
-print(get_lake_volume(input) == exp)
+    input = [1, 2, 2, 1]
+    exp = 0
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
-input = [0, -1, 0]
-exp = 1
-print(get_lake_volume(input) == exp)
+    input = [2, 2, 2, 2, 2]
+    exp = 0
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
-input = [2, 1, 1, 2]
-exp = 2
-print(get_lake_volume(input) == exp)
+    input = [2, 3, 2, 2, 2]
+    exp = 0
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
-input = [1, 0, 0, 1]
-exp = 2
-print(get_lake_volume(input) == exp)
+    input = [5]
+    exp = 0
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
-# on valley with bounds one step in
-input = [1, 2, 1, 1, 2, 1]
-exp = 2
-print(get_lake_volume(input) == exp)
+    input = [5, 6]
+    exp = 0
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
+    # on valley with bounds at the end
+    input = [2, 1, 2]
+    exp = 1
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
 
+    input = [1, 0, 1]
+    exp = 1
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
+
+    input = [0, -1, 0]
+    exp = 1
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
+
+    input = [2, 1, 1, 2]
+    exp = 2
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
+
+    input = [1, 0, 0, 1]
+    exp = 2
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
+
+    # on valley with bounds one step in
+    input = [1, 2, 1, 1, 2, 1]
+    exp = 2
+    print(get_lake_volume(input) == exp)
+    print(trap(input) == exp)
+
+tests()
