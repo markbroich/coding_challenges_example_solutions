@@ -99,6 +99,8 @@ def longest_increasing_subsequence_memo(arr):
         return memo[j]
 
     max_length = 0
+    # condieration to skip of valid elements
+    # happens here
     for i in range(len(arr)):
         cur_length = recure(i)
         if max_length < cur_length:
@@ -106,43 +108,65 @@ def longest_increasing_subsequence_memo(arr):
     return max_length
 
 
+# bootom up
+# Ot(n**2) Os(n)
+def longest_increasing_subsequence_table(arr):
+    max_table = 1
+    table = [1] * len(arr)
+    for i in range(len(arr) - 2, -1, -1):
+        cur_max = 1
+        for j in range(i + 1, len(arr)):
+            if arr[i] < arr[j]:
+                if cur_max < table[j] + 1:
+                    cur_max = table[j] + 1
+        table[i] = cur_max
+        if max_table < table[i]:
+            max_table = table[i]
+    return max_table
+
 
 def tests():
     nums = [1, 2, 1, 3]
     exp = 3
-    print(longest_increasing_subsequence(nums) == exp)
-    print(longest_increasing_subsequence_anohter(nums) == exp)
-    print(longest_increasing_subsequence_memo(nums) == exp)
+    print(longest_increasing_subsequence_table(nums) == exp)
+    # print(longest_increasing_subsequence(nums) == exp)
+    # print(longest_increasing_subsequence_anohter(nums) == exp)
+    # print(longest_increasing_subsequence_memo(nums) == exp)
 
     nums = [10, 9, 2, 5, 3, 7, 101, 18]
     exp = 4
-    print(longest_increasing_subsequence(nums) == exp)
-    print(longest_increasing_subsequence_anohter(nums) == exp)
-    print(longest_increasing_subsequence_memo(nums) == exp)
+    print(longest_increasing_subsequence_table(nums) == exp)
+    # print(longest_increasing_subsequence(nums) == exp)
+    # print(longest_increasing_subsequence_anohter(nums) == exp)
+    # print(longest_increasing_subsequence_memo(nums) == exp)
 
     nums = [1, 3, 2, 4]
     exp = 3
-    print(longest_increasing_subsequence(nums) == exp)
-    print(longest_increasing_subsequence_anohter(nums) == exp)
-    print(longest_increasing_subsequence_memo(nums) == exp)
+    print(longest_increasing_subsequence_table(nums) == exp)
+    # print(longest_increasing_subsequence(nums) == exp)
+    # print(longest_increasing_subsequence_anohter(nums) == exp)
+    # print(longest_increasing_subsequence_memo(nums) == exp)
 
     nums = [7, 7, 7, 7, 7, 7, 7]
     exp = 1
-    print(longest_increasing_subsequence(nums) == exp)
-    print(longest_increasing_subsequence_anohter(nums) == exp)
-    print(longest_increasing_subsequence_memo(nums) == exp)
+    print(longest_increasing_subsequence_table(nums) == exp)
+    # print(longest_increasing_subsequence(nums) == exp)
+    # print(longest_increasing_subsequence_anohter(nums) == exp)
+    # print(longest_increasing_subsequence_memo(nums) == exp)
 
     nums = [0, 1, 0, 3, 2, 3]
     exp = 4
-    print(longest_increasing_subsequence(nums) == exp)
-    print(longest_increasing_subsequence_anohter(nums) == exp)
-    print(longest_increasing_subsequence_memo(nums) == exp)
+    print(longest_increasing_subsequence_table(nums) == exp)
+    # print(longest_increasing_subsequence(nums) == exp)
+    # print(longest_increasing_subsequence_anohter(nums) == exp)
+    # print(longest_increasing_subsequence_memo(nums) == exp)
 
     nums = [1, 5, 2, 3, 4, 7, 2]
     exp = 5
-    print(longest_increasing_subsequence(nums) == exp)
-    print(longest_increasing_subsequence_anohter(nums) == exp)
-    print(longest_increasing_subsequence_memo(nums) == exp)
+    print(longest_increasing_subsequence_table(nums) == exp)
+    # print(longest_increasing_subsequence(nums) == exp)
+    # print(longest_increasing_subsequence_anohter(nums) == exp)
+    # print(longest_increasing_subsequence_memo(nums) == exp)
 
 
 tests()
