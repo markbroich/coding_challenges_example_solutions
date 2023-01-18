@@ -173,7 +173,7 @@ def pancake_sort(arr: list) -> list:
         arr = flip_Os1(arr, 0, index_of_largest)
         # then flip all
         # Ot(n) Os(1)
-        arr = flip_Os1(arr, 0, end - 1)
+        arr = flip_Os1_concise(arr, 0, end)
     return arr
 
 
@@ -200,9 +200,8 @@ def flip_Os1(arr, left, right):
 
 
 # # O(n) where n is the difference between i and j
-def flip_On(arr: list, right: int) -> list:
-    temp = arr[0:right]
-    arr[0:right] = temp[::-1]
+def flip_Os1_concise(arr: list, left: int, right: int) -> list:
+    arr[left:right] = arr[left:right][::-1]
     return arr
 
 
@@ -247,4 +246,7 @@ Example how it is done:
 # then flip all
 [1, 2, 3, 4, 5]
 # find largest (0: end) and flip.
+
+
+[2, 5, 1, 4, 3]
 '''
