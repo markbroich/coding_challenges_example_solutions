@@ -34,9 +34,9 @@ output: {
         }
 
 Important: when you concatenate keys, make sure to add the dot character between them. For instance concatenating Key2, c and d the result key would be Key2.c.d.
+I assume that duplicate result keys will not occure.
 
 Constraints:
-
 [time limit] 5000ms
 [input] Dictionary dict
 [output] Dictionary
@@ -178,6 +178,5 @@ def tests():
     print(flatten_dictionary(dictionary) == exp)
     print(flatten_dictionary_done_differently(dictionary) == exp)
     print(flatten_dictionary_loop_and_stack(dictionary) == exp)
-
 
 tests()
