@@ -1,7 +1,8 @@
 """
 Find K Closest Ints
 Given a sorted integer array arr, two integers k and x, return the k closest
-integers to x in the array. The result should also be sorted in ascending order.
+integers to x in the array. The result should also be sorted in ascending
+order.
 
 An integer a is closer to x than an integer b if:
 |a - x| < |b - x|, or
@@ -27,8 +28,24 @@ arr is sorted in ascending order.
 """
 
 
-# Ot(log(n)) were n is len of arr Os(1) +  Ot(k log(k)) Os(k)
+# Ot(n + n log(n) + k + k log (k)) Os(n + k)
+# reduces to: O(n)
 def k_closest(arr: list, x: int, k: int) -> list:
+    if k > len(arr):
+        return arr
+    # O(n)
+    diff_and_idx = [((abs(arr[i] - x), i)) for i in range(len(arr))]
+    # Ot(n log n) Os(1)
+    diff_and_idx.sort(key=lambda e: (e[0], e[1]))
+    # O(k)
+    res = [arr[diff_and_idx[i][1]] for i in range(k)]
+    # Ot(k log(k)) Os(1)
+    res.sort()
+    return res
+
+
+# Ot(log(n)) were n is len of arr Os(1) +  Ot(k log(k)) Os(k)
+def k_closest_fast(arr: list, x: int, k: int) -> list:
     if not arr or not x or not k:
         return []
     if k > len(arr):
@@ -151,42 +168,48 @@ def tests():
     x = 7
     print(find_closest_idx(arr, x) == 4)
 
-    # # full test of k_closest
+    # # full test of k_closest_fast
     arr = [1,2,3,4,5]
     k = 8
     x = 3
-    exp = [1,2,3,4]
-    print(k_closest(arr, x, k) == [1,2,3,4,5])
+    exp = [1,2,3,4,5]
+    print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
     k = 4
     x = 3
     exp = [1,2,3,4]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
     k = 4
     x = -1
     exp = [1,2,3,4]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
     k = 2
     x = 2
     exp = [1,2]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
     k = 3
     x = 4
     exp = [3,4,5]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
     k = 2
     x = 7
     exp = [4,5]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast(arr, x, k) == exp)
 
 
 tests()
