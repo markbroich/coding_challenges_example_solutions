@@ -21,7 +21,7 @@ Input: arr = [1,2,3,4,5], k = 2, x = 2
 Output: [1,2]]
 
 Constraints:
-1 <= k <= arr.length
+1 <= k
 1 <= arr.length <= 104
 arr is sorted in ascending order.
 -104 <= arr[i], x <= 104
@@ -42,6 +42,43 @@ def k_closest(arr: list, x: int, k: int) -> list:
     # Ot(k log(k)) Os(1)
     res.sort()
     return res
+
+
+# Ot(log(n)) were n is len of arr
+# Os(k)
+def k_closest_fast_short(arr: list, x: int, k: int) -> list:
+    if k > len(arr):
+        return arr
+    elif x < arr[0]:
+        return arr[0: k]
+    elif x > arr[len(arr) - 1]:
+        return arr[-k:]
+
+    left = 0
+    right = len(arr) - 1
+    # move in to find min difference
+    while left < right:
+        mid = left + int((right - left) / 2)
+        if abs(arr[mid] - x) >= abs(arr[mid + 1] - x):
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    # move out from min difference
+    # until k, favoring left if tie.
+    left = right = mid
+    while right - left < k - 1:
+        if abs(arr[left] - x) <= abs(arr[right] - x):
+            if left > 0:
+                left -= 1
+            else:
+                right += 1
+        else:
+            if right < len(arr) - 1:
+                right += 1
+            else:
+                left -= 1
+    return arr[left: right + 1]
 
 
 # Ot(log(n)) were n is len of arr Os(1) +  Ot(k log(k)) Os(k)
@@ -123,57 +160,13 @@ def a_vs_b(arr: list, x: int, a: int, b: int) -> int:
 
 
 def tests():
-    # # find_closest_idx
-    arr = [1,2,3,4,5]
-    x = 3
-    print(find_closest_idx(arr, x) == 2)
-
-    arr = [1,2,3,4,5]
-    x = -1
-    print(find_closest_idx(arr, x) == 0)
-
-    arr = [1,2,3,4,5]
-    x = 2
-    print(find_closest_idx(arr, x) == 1)
-
-    arr = [1,2,3,4,5]
-    x = 4
-    print(find_closest_idx(arr, x) == 3)
-
-    arr = [1,2,3,4,5]
-    x = 1
-    print(find_closest_idx(arr, x) == 0)
-
-    arr = [1,2,3,4,5]
-    x = 5
-    print(find_closest_idx(arr, x) == 4)
-
-    arr = [1,2,3,4,5]
-    x = 6
-    print(find_closest_idx(arr, x) == 4)
-
-    arr = [1,2,4,5]
-    x = 3
-    print(find_closest_idx(arr, x) == 1)
-
-    arr = [1,4,8,9]
-    x = 6
-    print(find_closest_idx(arr, x) == 1)
-
-    arr = [0,1,2,3,4,8,9]
-    x = 6
-    print(find_closest_idx(arr, x) == 4)
-
-    arr = [0,1,2,3,4,8,9]
-    x = 7
-    print(find_closest_idx(arr, x) == 4)
-
     # # full test of k_closest_fast
     arr = [1,2,3,4,5]
     k = 8
     x = 3
     exp = [1,2,3,4,5]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast_short(arr, x, k) == exp)
     print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
@@ -181,6 +174,7 @@ def tests():
     x = 3
     exp = [1,2,3,4]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast_short(arr, x, k) == exp)
     print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
@@ -188,6 +182,7 @@ def tests():
     x = -1
     exp = [1,2,3,4]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast_short(arr, x, k) == exp)
     print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
@@ -195,6 +190,7 @@ def tests():
     x = 2
     exp = [1,2]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast_short(arr, x, k) == exp)
     print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
@@ -202,6 +198,7 @@ def tests():
     x = 4
     exp = [3,4,5]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast_short(arr, x, k) == exp)
     print(k_closest_fast(arr, x, k) == exp)
 
     arr = [1,2,3,4,5]
@@ -209,7 +206,54 @@ def tests():
     x = 7
     exp = [4,5]
     print(k_closest(arr, x, k) == exp)
+    print(k_closest_fast_short(arr, x, k) == exp)
     print(k_closest_fast(arr, x, k) == exp)
+
+
+   # # find_closest_idx
+    # arr = [1,2,3,4,5]
+    # x = 3
+    # print(find_closest_idx(arr, x) == 2)
+
+    # arr = [1,2,3,4,5]
+    # x = -1
+    # print(find_closest_idx(arr, x) == 0)
+
+    # arr = [1,2,3,4,5]
+    # x = 2
+    # print(find_closest_idx(arr, x) == 1)
+
+    # arr = [1,2,3,4,5]
+    # x = 4
+    # print(find_closest_idx(arr, x) == 3)
+
+    # arr = [1,2,3,4,5]
+    # x = 1
+    # print(find_closest_idx(arr, x) == 0)
+
+    # arr = [1,2,3,4,5]
+    # x = 5
+    # print(find_closest_idx(arr, x) == 4)
+
+    # arr = [1,2,3,4,5]
+    # x = 6
+    # print(find_closest_idx(arr, x) == 4)
+
+    # arr = [1,2,4,5]
+    # x = 3
+    # print(find_closest_idx(arr, x) == 1)
+
+    # arr = [1,4,8,9]
+    # x = 6
+    # print(find_closest_idx(arr, x) == 1)
+
+    # arr = [0,1,2,3,4,8,9]
+    # x = 6
+    # print(find_closest_idx(arr, x) == 4)
+
+    # arr = [0,1,2,3,4,8,9]
+    # x = 7
+    # print(find_closest_idx(arr, x) == 4)
 
 
 tests()
