@@ -46,13 +46,10 @@ def min_cost(stones: list) -> int:
         return -1
     elif len(stones) == 2:
         return stones[1] - stones[0]
-    elif len(stones) == 3:
-        return stones[2] - stones[0]
 
-    min_jump = 0 
+    min_jump = 0
     for i in range(2, len(stones)):
         min_jump = max(min_jump, stones[i] - stones[i - 2])
-    min_jump = max(min_jump, stones[i] - stones[i - 1])
     return min_jump
 
 
@@ -86,7 +83,6 @@ print(min_cost(stones) == exp)
 
 stones = [0,2,5,6,7,20,40,42,45,55]
 exp = 33
-# print(min_cost(stones))
 print(min_cost(stones) == exp)
 
 stones = [0,3,4,10,20]
