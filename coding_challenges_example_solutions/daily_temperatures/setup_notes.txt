@@ -1,0 +1,6 @@
+# no setup needed as code uses base python3
+
+# to run:
+python daily_temperatures.py
+
+
