@@ -1,0 +1,5 @@
+# no setup needed as code uses base python3
+
+# to run:
+python course_schedule.py
+
