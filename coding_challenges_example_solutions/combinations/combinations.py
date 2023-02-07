@@ -70,3 +70,52 @@ print(combinations(n, k) == [[3, 4], [2, 3], [2, 4], [1, 2], [1, 3], [1, 4]])
 n = 5
 k = 3
 print(combinations(n, k) == [[3,4,5], [2,4,5], [2,3,4], [2,3,5], [1,4,5], [1,3,4], [1,3,5], [1,2,3], [1,2,4], [1,2,5]])
+
+
+'''Below I add permutations.
+In permutations the order matters: so 1,2 != 2,1.
+So, the answer for n = 3, k = 2
+is [[1, 2], [2, 1], [1, 3], [3, 1], [2, 3], [3, 2]])
+'''
+
+
+# O(n**k)
+def permutations(n, k):
+    res = []
+    def rec(current, seen):
+        if len(current) == k:
+            res.append(current)
+            return
+        if not seen:
+            seen = set()
+        if current:
+            seen.add(current[-1])
+        for j in range(1, n + 1):
+            if j not in seen:
+                rec(current + [j], seen)
+    rec([], None)
+    return res
+
+print()
+n = 3
+k = 2
+print(permutations(n, k) == [[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]])
+
+
+def permutations(n, k):
+    res = []
+    stack = [[]]
+    while stack:
+        current = stack.pop()
+        if len(current) == k:
+            res.append(current)
+            continue
+        for i in range(1, n + 1):
+            if i not in current:
+                stack.append(current + [i])
+    return res
+
+
+n = 3
+k = 2
+print(permutations(n, k) == [[3, 2], [3, 1], [2, 3], [2, 1], [1, 3], [1, 2]])
