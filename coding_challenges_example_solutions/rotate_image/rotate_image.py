@@ -23,6 +23,9 @@ Output: [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
 '''
 
 
+from typing import List
+
+
 # Ot(n) Os(1) where n is number of cells in the matrix
 def rotate(matrix):
 
@@ -64,16 +67,39 @@ def rotate(matrix):
     return matrix
 
 
+# the elegant solution.
+# Ot(n) Os(1) where n is number of cells in the matrix
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        self.transpose(matrix)
+        self.reflect(matrix)
+        return matrix
+
+    def transpose(self, matrix: List[List[int]]) -> None:
+        for r in range(len(matrix)):
+            for c in range(r + 1, len(matrix)):
+                matrix[r][c], matrix[c][r] = matrix[c][r], matrix[r][c]
+
+    def reflect(self, matrix: List[List[int]]) -> None:
+        for r in range(len(matrix)):
+            for c in range(len(matrix) // 2):
+                matrix[r][c], matrix[r][len(matrix) - 1 - c] =\
+                    matrix[r][len(matrix) - 1 - c], matrix[r][c]
+
+
 def tests():
     matrix = [[1,2,3],[4,5,6],[7,8,9]]
     expected = [[7,4,1],[8,5,2],[9,6,3]]
     print(rotate(matrix) == expected)
-
+    matrix = [[1,2,3],[4,5,6],[7,8,9]]
+    S1 = Solution()
+    S1.rotate(matrix)
 
     matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
     expected = [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
     print(rotate(matrix) == expected)
-
+    matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+    print(S1.rotate(matrix) == expected)
     '''
     [5,1,9,11]
     [2,4,8,10]
@@ -84,7 +110,6 @@ def tests():
     [14,3,4,1]
     [12,6,8,9]
     [16,7,10,11]
-
     '''
 
     matrix = [
@@ -101,5 +126,8 @@ def tests():
         [25,20,15,10,5]]
 
     print(rotate(matrix) == expected)
+    matrix = [[1,2,3,4,5], [6,7,8,9,10], [11,12,13,14,15], [16,17,18,19,20], [21,22,23,24,25]]
+    print(S1.rotate(matrix) == expected)
+
 
 tests()
