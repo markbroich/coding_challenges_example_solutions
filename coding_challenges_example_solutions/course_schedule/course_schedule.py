@@ -249,3 +249,84 @@ n = 5
 expected = True
 print(S1.canFinish(n, prerequisites) == expected)
 print()
+
+
+# https://leetcode.com/problems/course-schedule-ii/
+# Here I return the order of the courses.
+# If a cycle exists, I return None
+def course_order(n, prerequisites):
+    free_courses = set()
+    [free_courses.add(i) for i in range(n)]
+
+    graph_prerequ_count = {}
+    graph_is_pre_of = {}
+    # Ot(p) Os(2p) where p is length of
+    # prerequisites
+    for course, pre in prerequisites:
+        if course in free_courses:
+            free_courses.remove(course)
+        if course not in graph_prerequ_count:
+            graph_prerequ_count[course] = 1
+        else:
+            graph_prerequ_count[course] += 1
+        #
+        if pre not in graph_is_pre_of:
+            graph_is_pre_of[pre] = [course]
+        else:
+            graph_is_pre_of[pre].append(course)
+
+    # dfs
+    # O(n + p) we need to visit every node and traverse on each
+    # prerequisite edge
+    order_of_courses = []
+    free_courses = [list(free_courses)]
+    counter = len(free_courses[0])
+    while free_courses:
+        pre_batch = free_courses.pop(0)
+        order_of_courses.append(pre_batch)
+        for pre in pre_batch:
+            new_pre_batch = []
+            if pre in graph_is_pre_of:
+                for course in graph_is_pre_of[pre]:
+                    graph_prerequ_count[course] -= 1
+                    if graph_prerequ_count[course] == 0:
+                        new_pre_batch.append(course)
+                        counter += 1
+                del graph_is_pre_of[pre]
+            if new_pre_batch:
+                free_courses.append(new_pre_batch)
+
+    if counter == n:
+        return order_of_courses
+    return None
+
+
+prerequisites = [[1,0],[0,3],[0,2],[3,2],[2,5],[4,5],[5,6],[2,4]]
+numCourses = 7
+expected = [[6], [5], [4], [2], [3], [0], [1]]
+print(course_order(numCourses, prerequisites) == expected)
+
+prerequisites = [[1,0]]
+numCourses = 2
+expected = [[0], [1]]
+print(course_order(numCourses, prerequisites) == expected)
+
+prerequisites = [[1,0],[0,1]]
+numCourses = 2
+expected = None
+print(course_order(numCourses, prerequisites) == expected)
+
+prerequisites = [[1, 0], [2, 0], [3, 2], [3, 1]]
+numCourses = 4
+expected = [[0], [1, 2], [3]]
+print(course_order(numCourses, prerequisites) == expected)
+
+prerequisites = [[1, 0], [2, 0], [3, 2], [3, 1], [0, 3]]
+numCourses = 4
+expected = None
+print(course_order(n, prerequisites) == expected)
+
+prerequisites = [[0, 1], [0, 2], [1, 3], [1, 4], [3, 4]]
+numCourses = 5
+expected = [[2, 4], [3], [1], [0]]
+print(course_order(numCourses, prerequisites) == expected)
