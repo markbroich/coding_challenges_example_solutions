@@ -37,9 +37,12 @@ All elements of candidates are distinct.
 1 <= target <= 40
 '''
 
+import copy
 
-# O(split ** tree_depth) where splits is equal to len of candidates. 
+
+# Ot(split ** tree_depth) where splits is equal to len of candidates.
 # tree depth will vary with a max of len of candidates.
+# Os(tree depth)
 def combination_sum(candidates: list, target: int):
     combinations = []
     seen = set()
@@ -65,8 +68,9 @@ def combination_sum(candidates: list, target: int):
     return combinations
 
 
-# O(t**t) where t is length candidates. So this is worth case
+# Ot(t**t) where t is length candidates. So this is worth case
 # where we use each element in candidates
+# Os(tree depth). In the worth case tree depth is len(candidates)
 def combination_sum(candidates: list, target: int):
     combinations = []
     candidates.sort()
@@ -79,6 +83,30 @@ def combination_sum(candidates: list, target: int):
             return
         for j in range(i, len(candidates)):
             rec(j, cur + [candidates[j]], cur_sum + candidates[j])
+
+    rec(0, [], 0)
+    return combinations
+
+
+# Ot(2**t) where t is length candidates. So this is worth case
+# where we use each element in candidates.
+# The more likely case is that
+# the tree depth is less than len(candidates)
+# Os(tree depth).
+def combination_sum(candidates: list, target: int):
+    combinations = []
+
+    def rec(idx: int, cur: list, cur_sum: int):
+        if cur_sum == target:
+            combinations.append(copy.deepcopy(cur))
+            return
+        elif idx > len(candidates) - 1 or cur_sum > target:
+            return
+
+        cur = cur + [candidates[idx]]
+        rec(idx, cur, cur_sum + candidates[idx])
+        cur.pop()
+        rec(idx + 1, cur, cur_sum)
 
     rec(0, [], 0)
     return combinations
