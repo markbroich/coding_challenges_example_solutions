@@ -1,0 +1,10 @@
+#install kaggle
+pip install kaggle
+
+# conda env setup
+conda create -n used_cars_env ipython-notebook numpy pandas scikit-learn
+source activate used_cars_env
+
+# start the notebook
+ipython notebook coding_test_2_solution.ipynb
+

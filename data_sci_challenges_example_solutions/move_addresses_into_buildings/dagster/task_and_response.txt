@@ -1,0 +1,36 @@
+Task: We need to make sure all addresses are allocated to a structure (building polygon).
+For a detailed task description pls see: https://github.com/ready/builders-challenge/issues/18
+
+Please refer to readme.txt in dagster/ folder for instructions on how to run my ETL pipeline end-to-end with a single command.
+Readme.txt also explains where the expected ‘Outputs’ (RESULT_IMPROVED_GEO_PRECISION.csv, REPORT_IMPROVED_GEOPRECISION.txt and  KEPLER_LOCATIONS_MOVED.html) will be located following a run.
+
+Workflow:
+ETL software: Dagster within Docker
+Steps in python main function:
+- Download and pre-process
+- Split locations within and not within bounds of buildings
+- Split locations within and not within building poly (locations already in buildings are assumed to be ideal already!).
+- Get parcels that are not roads
+-Split locations not in buildings into in parcels and not in parcels
+ -Split buildings into in parcels and not in parcels
+-The locations in a parcel will be mapped to the closest building in the parcel (using great circle distance).
+-The locations not in a parcel will be mapped to the closest building anywhere (using great circle distance; approach is to build a rtree for the buildings then find for each location the knn buildings, then use great circle distance to select the closest).
+-Merge the 2 kinds of improved precision location points gdfs with the original gdf_location and write to a csv.
+-Write fitted locations to a line string geojson for (from-to) visualisation
+-Create Kepler map for result visualisation
+-Write report
+
+
+Report: 
+On average, how far are original geolocation moved?
+- 24.18 meters
+Points moved to the closest building within the same parcel : 47991.
+Points to be moved to the closest building (given that they were located outside of a parcel to start with): 5495.
+Points that not moved because they were already in a building: 41452
+How many points with too little information to move anywhere?
+- 46
+What else (other data) can we use to enhance the accuracy?
+- Location (address point) – parcel association (is my association valid given that the location is in the parcel?). I could ‘validate’ via ‘fuzzy wuzzy’ string matching. Matching scores >= x could be considered valid matches while scores < x could be listed for manual review. For wuzzy fussy see: https://www.geeksforgeeks.org/how-to-do-fuzzy-matching-on-pandas-dataframe-column-using-python/ ; https://towardsdatascience.com/fuzzywuzzy-the-before-and-after-c3661ea62ef8 ; https://www.geeksforgeeks.org/fuzzywuzzy-python-library/
+- Locations matched to the closest building (rather than closest building within parcel) would benefit from extra QA. E.g. if distance moved > y, flag for manual review.
+- Improve the kepler.html by adding the parcels and reducing the line width and setting fill to transparent.
+Re runtime, we could try to reproject to UTM and then use Geopandas nearest neighbour (and index tree behind the scene) directly without having to worry about great circle distance. rtree approach I chose to get knn and then find nearest is better than Ot(m*n) but still rather slow. For massive scaling, I had success with pyspark and Apache Sedona. 

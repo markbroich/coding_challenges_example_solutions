@@ -1,0 +1,7 @@
+# no setup needed as code uses base python3
+
+# to run:
+Please refer to readme.txt in dagster/ folder for instructions on how to run my ETL pipeline end-to-end with a single command.
+
+
+# for a description of the task see: dagster/task_and_response.txt

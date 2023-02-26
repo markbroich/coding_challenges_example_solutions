@@ -1,0 +1,8 @@
+# conda env setup
+conda create -n xgboost_env -c conda-forge python=3 numpy pandas scikit-learn category_encoders ipython-notebook wget matplotlib=3 xgboost unzip
+source activate xgboost_env
+
+# start the notebook
+ipython notebook card_transactions_takehome.ipynb
+
+
