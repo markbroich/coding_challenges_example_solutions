@@ -1,0 +1,6 @@
+# setup env w numpy and  python3
+
+# to run:
+python kmeans.py
+
+
