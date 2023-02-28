@@ -1,0 +1,6 @@
+# no setup needed as code uses base python3
+
+# to run:
+python palandrom_of_linked_list.py
+
+
