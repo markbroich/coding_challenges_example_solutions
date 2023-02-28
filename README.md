@@ -1,6 +1,6 @@
-## This repo contains example solutions for python coding challenges.
+## This repo contains example solutions for data science problems and competitive coding challenges in python.
 
-### This repo is for anyone interested in python-based competitive programming and data science challenges, their possible solutions, and examples of my code (that are not subject to a non-disclosure agreement).
+### This repo is for anyone interested in python-based data science and competitive programming challenges, their possible solutions, and examples of my code (that are not subject to a non-disclosure agreement).
 
 
 ### Enjoy and happy coding :-)
