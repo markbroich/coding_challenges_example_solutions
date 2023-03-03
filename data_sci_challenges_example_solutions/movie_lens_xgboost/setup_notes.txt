@@ -1,0 +1,10 @@
+# to build docker image run container and run python code
+docker build -t python_image --build-arg PYTHON_VERSION=3.9.8 --build-arg IMAGE=slim-buster .
+docker run -it -v $PWD/data:"/data" python_image /bin/bash
+python main.py
+
+
+# Uncomment this line in main.py:
+# FILE_URL = "https://files.grouplens.org/datasets/movielens/ml-latest.zip"
+# to run the full dataset. 
+
