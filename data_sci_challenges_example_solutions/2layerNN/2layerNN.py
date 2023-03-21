@@ -85,11 +85,15 @@ print("")
 #     1000         [   ]      100
 #                   100
 
+# so w1 has 100 neurons each with 1000 weights
+
 #       sigm(yTemp)  *       w2   =  yPred
 #                           [ ]  
 # sigm(   64[   ]       100 [ ]    64 [ ]
 #           [   ] )         [ ]       [ ]
 #            100             10        10
+
+# so w2 has 10 neurons each with 100 weights
 
 #    (  yPred   -    y  )^2    =   loss
 #                           
@@ -116,8 +120,8 @@ class MultiplicationGate:
         z = self.x.dot(self.y)
         return z
     def bp(self, dz):
-        dx = self.x.T.dot(dz) 
-        dy = dz.dot(self.y.T) 
+        dx = self.x.T.dot(dz)
+        dy = dz.dot(self.y.T)
         return dx, dy
 
 # signmoid module
