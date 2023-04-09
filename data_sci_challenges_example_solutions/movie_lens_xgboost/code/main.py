@@ -20,9 +20,8 @@ Creating a df w/ 1,206,422,568 rows for ranking is unlikley to fit in memory.
 I hence wrote code to break down the task so it can run on a laptop.
 '''
 
-import os
 from datetime import datetime
-from joblib import dump, load
+from joblib import dump
 
 import numpy as np
 import pandas as pd
@@ -136,3 +135,114 @@ https://github.com/dao-v/Movie_Recommendation_System/blob/master/Movie%20Recomme
 https://towardsdatascience.com/how-to-evaluate-learning-to-rank-models-d12cadb99d47
 https://towardsdatascience.com/how-to-implement-learning-to-rank-model-using-python-569cd9c49b08
 '''
+
+
+# ######### using spark to predict:
+
+# '''
+# Using pyspark:
+# https://github.com/jadianes/spark-movie-lens/blob/master/notebooks/building-recommender.ipynb
+# '''
+# from pyspark.sql import SparkSession
+# from pyspark import SparkConf
+
+
+# '''spark_config.py'''
+
+
+# from pyspark.sql import SparkSession
+# from pyspark import SparkConf
+
+# def create_prod_context() -> SparkSession:
+#     spark_conf = SparkConf()
+#     # as per: http://spark-configuration.luminousmen.com/
+#     spark_conf.setAll(
+#         [
+#             ("spark.default.parallelism", "140"),
+#             ("spark.executor.memory", "9g"),
+#             ("spark.executor.instances", "14"),
+#             ("spark.driver.cores", "5"),
+#             ("spark.executor.cores", "3"),
+#             ("spark.driver.memory", "9g"),
+#             ("spark.driver.maxResultSize", "9g"),
+#             ("spark.driver.memoryOverhead", "921m"),
+#             ("spark.executor.memoryOverhead", "921m"),
+#             ("spark.dynamicAllocation.enabled", "false"),
+#             ("spark.sql.adaptive.enabled", "true"),
+#             ("spark.sql.files.maxPartitionBytes", "50000000"),  # 50MB max partition size
+#             ("spark.sql.partitions", "8000"),
+#             ("spark.sql.sources.partitionOverwriteMode", "dynamic"),
+#             ("spark.sql.shuffle.partitions", "8000"),
+#             ("spark.sql.inMemoryColumnarStorage.compressed", "true"),
+#             ("spark.checkpoint.compress", "true"),
+#             ("spark.broadcast.compress", "true"),
+#             ("spark.rdd.compress", "true"),
+#             ("spark.scheduler.mode", "FAIR"),
+#             ("spark.sql.broadcastTimeout", "3600"),
+#             ("spark.network.timeout", "1200"),
+#             ("spark.shuffle.io.maxRetries", "10"),
+#             ("spark.shuffle.io.retryWait", "540"),
+#             ("spark.rpc.numRetries", "10"),
+#             ("spark.task.maxFailures", "5"),
+#             # garbage collection from executors
+#             ("spark.cleaner.periodicGC.interval", "1min"),  # default 30mins. this allows faster memory cleanup for executors
+#             ("spark.cleaner.referenceTracking", "true"),
+#             (
+#                 "spark.cleaner.referenceTracking.cleanCheckpoints",
+#                 "true",
+#             ),  # this removes checkpoint directories in EBS volumes after their reference expires.
+#             ("spark.cleaner.referenceTracking.blocking", "false"),
+#         ]
+#     )
+#     return SparkSession.builder.config(conf=spark_conf).getOrCreate()
+
+
+# def main():
+#     create_prod_context()
+
+
+# from spark.spark_config import create_prod_context
+
+
+# #######
+# from pyspark import SparkContext
+# from pyspark.sql.functions import udf
+# spark = SparkSession.builder.master("local[*]").getOrCreate()
+# sc = spark.sparkContext
+# broadcast_model = sc.broadcast(model)
+
+
+# df = spark.createDataFrame(X)
+# print((df.count(), len(df.columns)))
+
+# @udf('float')
+# def predict_data(*cols):
+#    return float(broadcast_model.value.predict((cols,)))
+
+# list_of_columns = df.columns
+# df = df.withColumn("prediction", predict_data(*list_of_columns))
+# # df.head(5)
+# df.select(df['prediction']).take(K)
+# # [Row(prediction=0.26368072628974915), Row(prediction=-0.6309579014778137), Row(prediction=0.26368072628974915), Row(prediction=0.26368072628974915), Row(prediction=-0.5870208144187927)]# 
+
+
+# partitions = 1 # 4
+
+# df = spark.createDataFrame(X)
+# rdd = df.rdd
+# print(rdd.getNumPartitions())
+# rdd = rdd.repartition(partitions)
+# print(rdd.getNumPartitions())
+
+# col_count = len(df.columns)
+# def movie_prediction(iterator):
+#     res = []
+#     for x in iterator:
+#         x = np.reshape(x, (-1, col_count))
+#         res.append(float(broadcast_model.value.predict((x))))
+#     return [res]
+
+
+# mapped = rdd.mapPartitions(movie_prediction)
+# result = mapped.collect()
+# result
