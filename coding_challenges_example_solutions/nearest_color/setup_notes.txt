@@ -1,6 +1,12 @@
 # no setup needed as code uses base python3
 
 # run
-python nearest_color.py
+python3 nearest_color.py
 
 
+# to run pytorch version:
+python3 -m venv .env_torch
+source .env_torch/bin/activate
+pip3 install torch torchvision
+
+python3 nearest_color_torch.py
