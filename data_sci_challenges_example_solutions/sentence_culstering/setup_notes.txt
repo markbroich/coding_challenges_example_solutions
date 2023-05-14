@@ -1,0 +1,11 @@
+# setup
+python3 -m venv sentence_clustering
+source sentence_clustering/bin/activate
+pip install torch transformers scikit-learn numpy matplotlib
+
+
+# To run:
+python sentence_clustering.py
+
+# Attribution: code with insturations from chat gpt
+
