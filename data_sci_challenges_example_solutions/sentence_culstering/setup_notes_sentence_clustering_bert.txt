@@ -5,7 +5,7 @@ pip install torch transformers scikit-learn numpy matplotlib
 
 
 # To run:
-python sentence_clustering.py
+python sentence_clustering_bert.py
 
 # Attribution: code with insturations from chat gpt
 

@@ -1,0 +1,14 @@
+# setup
+python3 -m venv sentence_clustering_stsb-xlm-r-multilingual
+source sentence_clustering_stsb-xlm-r-multilingual/bin/activate
+
+brew update
+brew install python@3.9
+python --version
+
+pip3.9 install transformers torch scikit-learn numpy
+
+# To run:
+python3.9 sentence_clustering_stsb-xlm-r-multilingual.py
+
+# Attribution: code with insturations from chat gpt and huggingface
